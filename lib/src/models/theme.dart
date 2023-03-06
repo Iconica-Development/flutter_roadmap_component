@@ -19,7 +19,7 @@ class RoadmapTheme {
     this.markerRadius = 40.0,
     this.markerShape = MarkerShape.circle,
   });
-  
+
   final Color? lineColor;
   final Color? markerColor;
   final Color? markerTextColor;

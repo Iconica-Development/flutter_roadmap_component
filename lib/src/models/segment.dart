@@ -12,16 +12,13 @@ class Segment {
     this.quadracticPoint,
     this.cubicPointOne,
     this.cubicPointTwo,
+    this.segmentEndPoint,
     this.text,
     this.showArrow,
   }) : assert(
-          (quadracticPoint != null &&
-                  cubicPointOne == null &&
-                  cubicPointTwo == null) ||
-              (quadracticPoint == null &&
-                  cubicPointOne != null &&
-                  cubicPointTwo != null),
-          'Must have either quadracticPoint or cubicPointOne and cubicPointTwo',
+          quadracticPoint != null ||
+              (cubicPointOne != null && cubicPointTwo != null),
+          'Cannot have both quadracticPoint and cubicPointOne or cubicPointTwo',
         );
 
   /// Quadratic bezier curve point
@@ -32,6 +29,10 @@ class Segment {
 
   /// Second Cubic bezier curve point
   final Point<double>? cubicPointTwo;
+
+  /// Point at the end of the segment, use this when adding
+  /// multiple segments in a line
+  final Point<double>? segmentEndPoint;
 
   /// Text displayed along the segment
   final String? text;
