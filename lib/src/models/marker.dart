@@ -2,6 +2,9 @@
 //
 // SPDX-License-Identifier: BSD-3-Clause
 
-library flutter_roadmap;
-
-export 'src/ui/roadmap.dart';
+enum MarkerShape {
+  circle,
+  square,
+  hexagon,
+  custom,
+}
