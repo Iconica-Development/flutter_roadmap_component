@@ -4,4 +4,9 @@
 
 library flutter_roadmap;
 
+export 'src/models/marker.dart';
+export 'src/models/roadmap_line.dart';
+export 'src/models/roadmap_point.dart';
+export 'src/models/segment.dart';
+export 'src/models/theme.dart';
 export 'src/ui/roadmap.dart';
