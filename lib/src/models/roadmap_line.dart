@@ -24,4 +24,14 @@ class RoadmapLine {
 
   /// Single segment between two points, used for making simple lines
   final Segment? segment;
+
+  RoadmapLine copyWith({
+    List<Segment>? segments,
+    Segment? segment,
+  }) {
+    return RoadmapLine(
+      segments: segments ?? this.segments,
+      segment: segment ?? this.segment,
+    );
+  }
 }

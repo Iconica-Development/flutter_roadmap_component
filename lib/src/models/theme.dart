@@ -31,4 +31,30 @@ class RoadmapTheme {
 
   final double dashLength;
   final double dashSpace;
+
+  RoadmapTheme copyWith({
+    Color? lineColor,
+    Color? markerColor,
+    Color? markerTextColor,
+    Color? segmentTextColor,
+    Color? overlayColor,
+    double? markerRadius,
+    double? lineWidth,
+    MarkerShape? markerShape,
+    double? dashLength,
+    double? dashSpace,
+  }) {
+    return RoadmapTheme(
+      lineColor: lineColor ?? this.lineColor,
+      markerColor: markerColor ?? this.markerColor,
+      markerTextColor: markerTextColor ?? this.markerTextColor,
+      segmentTextColor: segmentTextColor ?? this.segmentTextColor,
+      overlayColor: overlayColor ?? this.overlayColor,
+      markerRadius: markerRadius ?? this.markerRadius,
+      lineWidth: lineWidth ?? this.lineWidth,
+      markerShape: markerShape ?? this.markerShape,
+      dashLength: dashLength ?? this.dashLength,
+      dashSpace: dashSpace ?? this.dashSpace,
+    );
+  }
 }

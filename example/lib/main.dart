@@ -80,11 +80,34 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                 ),
               ),
               RoadmapLine(
-                segment: Segment(
-                  quadracticPoint: Point(0.45, 0.65),
-                  showArrow: true,
-                  text: 'Going strong',
-                ),
+                //   RoadmapPoint(
+                //   point: Point(0.42, 0.17),
+                // ),
+                // RoadmapPoint(
+                //   point: Point(0.5, 0.65),
+                // ),
+                segments: [
+                  Segment(
+                    quadracticPoint: Point(0.5, 0.17),
+                    showArrow: true,
+                    text: 'Going strong',
+                    segmentEndPoint: Point(0.5, 0.30),
+                  ),
+                  Segment(
+                    quadracticPoint: Point(0.42, 0.4),
+                    segmentEndPoint: Point(0.42, 0.3),
+                  ),
+                  Segment(
+                    quadracticPoint: Point(0.5, 0.65),
+                    segmentEndPoint: Point(0.5, 0.65),
+                  ),
+                ],
+
+                // Segment(
+                //   quadracticPoint: Point(0.45, 0.65),
+                //   showArrow: true,
+                //   text: 'Going strong',
+                // ),
               ),
               RoadmapLine(
                 segment: Segment(
@@ -123,8 +146,7 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                     left: size.width * 0.05,
                     top: size.height * 0.02,
                   ),
-                  child: // colored box
-                      Container(
+                  child: Container(
                     width: size.width * 0.2,
                     height: size.height * 0.1,
                     decoration: const BoxDecoration(

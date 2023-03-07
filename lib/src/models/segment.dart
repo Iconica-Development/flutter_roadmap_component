@@ -39,4 +39,22 @@ class Segment {
 
   /// Whether to show an arrow at the end of the segment
   final bool? showArrow;
+
+  Segment copyWith({
+    Point<double>? quadracticPoint,
+    Point<double>? cubicPointOne,
+    Point<double>? cubicPointTwo,
+    Point<double>? segmentEndPoint,
+    String? text,
+    bool? showArrow,
+  }) {
+    return Segment(
+      quadracticPoint: quadracticPoint ?? this.quadracticPoint,
+      cubicPointOne: cubicPointOne ?? this.cubicPointOne,
+      cubicPointTwo: cubicPointTwo ?? this.cubicPointTwo,
+      segmentEndPoint: segmentEndPoint ?? this.segmentEndPoint,
+      text: text ?? this.text,
+      showArrow: showArrow ?? this.showArrow,
+    );
+  }
 }
