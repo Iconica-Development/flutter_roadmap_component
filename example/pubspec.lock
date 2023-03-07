@@ -66,7 +66,7 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: master
+      ref: "3.0.0"
       resolved-ref: b64b45662c29068f0b88234b4b0251da342cb74c
       url: "https://github.com/Iconica-Development/flutter_iconica_analysis"
     source: git
@@ -79,6 +79,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  flutter_roadmap:
+    dependency: "direct main"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -195,3 +202,4 @@ packages:
     version: "2.1.4"
 sdks:
   dart: ">=2.19.2 <3.0.0"
+  flutter: ">=1.17.0"

@@ -8,6 +8,8 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
+  flutter_roadmap:
+    path: ../
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -15,6 +17,6 @@ dev_dependencies:
   flutter_iconica_analysis:
     git:
       url: https://github.com/Iconica-Development/flutter_iconica_analysis
-      ref: master
+      ref: 3.0.0
 flutter:
   uses-material-design: true
