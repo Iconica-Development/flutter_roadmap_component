@@ -10,3 +10,4 @@ export 'src/models/roadmap_point.dart';
 export 'src/models/segment.dart';
 export 'src/models/theme.dart';
 export 'src/ui/roadmap.dart';
+export 'src/ui/roadmap_creator.dart';
