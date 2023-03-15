@@ -13,12 +13,16 @@ class RoadmapTheme {
     this.markerTextColor,
     this.segmentTextColor,
     this.overlayColor,
-    this.lineWidth = 20.0,
-    this.dashLength = 10.0,
-    this.dashSpace = 10.0,
-    this.markerRadius = 40.0,
-    this.markerShape = MarkerShape.circle,
-  });
+    double? lineWidth,
+    double? dashLength,
+    double? dashSpace,
+    double? markerRadius,
+    MarkerShape? markerShape,
+  })  : lineWidth = lineWidth ?? 20,
+        dashLength = dashLength ?? 10,
+        dashSpace = dashSpace ?? 10,
+        markerRadius = markerRadius ?? 40,
+        markerShape = markerShape ?? MarkerShape.circle;
 
   /// Creates a roadmap theme from json data that is camelCase
   /// Colors are stored as ints in json, so they need to be converted
@@ -37,6 +41,20 @@ class RoadmapTheme {
         overlayColor: json['overlayColor'] == null
             ? null
             : Color(json['overlayColor'] as int),
+        markerRadius: json['markerRadius'] == null
+            ? null
+            : json['markerRadius'] as double,
+        lineWidth:
+            json['lineWidth'] == null ? null : json['lineWidth'] as double,
+        markerShape: (json['markerShape'] == null)
+            ? null
+            : MarkerShape.values.firstWhere(
+                (element) => element.name == json['markerShape'],
+              ),
+        dashLength:
+            json['dashLength'] == null ? null : json['dashLength'] as double,
+        dashSpace:
+            json['dashSpace'] == null ? null : json['dashSpace'] as double,
       );
 
   final Color? lineColor;
@@ -50,6 +68,20 @@ class RoadmapTheme {
 
   final double dashLength;
   final double dashSpace;
+
+  /// Returns a json representation of the roadmap theme
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'lineColor': lineColor?.value,
+        'markerColor': markerColor?.value,
+        'markerTextColor': markerTextColor?.value,
+        'segmentTextColor': segmentTextColor?.value,
+        'overlayColor': overlayColor?.value,
+        'markerRadius': markerRadius,
+        'lineWidth': lineWidth,
+        'markerShape': markerShape.name,
+        'dashLength': dashLength,
+        'dashSpace': dashSpace,
+      };
 
   RoadmapTheme copyWith({
     Color? lineColor,

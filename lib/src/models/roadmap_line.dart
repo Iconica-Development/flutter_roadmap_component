@@ -39,6 +39,12 @@ class RoadmapLine {
   /// Single segment between two points, used for making simple lines
   final Segment? segment;
 
+  /// Returns a json representation of the roadmap line
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'segments': segments?.map((segment) => segment.toJson()).toList(),
+        'segment': segment?.toJson(),
+      };
+
   RoadmapLine copyWith({
     List<Segment>? segments,
     Segment? segment,

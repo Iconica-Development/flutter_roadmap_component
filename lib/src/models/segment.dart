@@ -74,6 +74,36 @@ class Segment {
   /// Whether to show an arrow at the end of the segment
   final bool? showArrow;
 
+  /// Returns a json representation of the segment
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'text': text,
+        'showArrow': showArrow,
+        'quadracticPoint': quadracticPoint == null
+            ? null
+            : <String, dynamic>{
+                'x': quadracticPoint!.x,
+                'y': quadracticPoint!.y,
+              },
+        'cubicPointOne': cubicPointOne == null
+            ? null
+            : <String, dynamic>{
+                'x': cubicPointOne!.x,
+                'y': cubicPointOne!.y,
+              },
+        'cubicPointTwo': cubicPointTwo == null
+            ? null
+            : <String, dynamic>{
+                'x': cubicPointTwo!.x,
+                'y': cubicPointTwo!.y,
+              },
+        'segmentEndPoint': segmentEndPoint == null
+            ? null
+            : <String, dynamic>{
+                'x': segmentEndPoint!.x,
+                'y': segmentEndPoint!.y,
+              },
+      };
+
   Segment copyWith({
     Point<double>? quadracticPoint,
     Point<double>? cubicPointOne,

@@ -47,6 +47,14 @@ class RoadmapPoint {
   /// Widget builder for the point
   final Widget Function(BuildContext context)? widgetBuilder;
 
+  /// Returns a json representation of the roadmap point
+  Map<String, dynamic> toJson() => <String, dynamic>{
+        'x': point.x,
+        'y': point.y,
+        'text': text,
+        'markerShape': markerShape?.name,
+      };
+
   RoadmapPoint copyWith({
     Point<double>? point,
     String? text,
