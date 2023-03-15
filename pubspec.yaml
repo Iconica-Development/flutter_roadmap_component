@@ -7,6 +7,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  collection: ^1.17.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -14,5 +16,5 @@ dev_dependencies:
   flutter_iconica_analysis:
     git:
       url: https://github.com/Iconica-Development/flutter_iconica_analysis
-      ref: 3.0.0
+      ref: 4.0.0
 flutter:

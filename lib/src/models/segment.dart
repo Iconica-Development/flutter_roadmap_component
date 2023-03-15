@@ -21,6 +21,40 @@ class Segment {
           'Cannot have both quadracticPoint and cubicPointOne or cubicPointTwo',
         );
 
+  /// Creates a segment from json data that is camelCase
+  factory Segment.fromJson(Map<String, dynamic> json) => Segment(
+        text: json['text'] as String?,
+        showArrow: json['showArrow'] as bool?,
+        quadracticPoint: json['quadracticPoint'] == null
+            ? null
+            : Point(
+                (json['quadracticPoint'] as Map<String, dynamic>)['x']
+                    as double,
+                (json['quadracticPoint'] as Map<String, dynamic>)['y']
+                    as double,
+              ),
+        cubicPointOne: json['cubicPointOne'] == null
+            ? null
+            : Point(
+                (json['cubicPointOne'] as Map<String, dynamic>)['x'] as double,
+                (json['cubicPointOne'] as Map<String, dynamic>)['y'] as double,
+              ),
+        cubicPointTwo: json['cubicPointTwo'] == null
+            ? null
+            : Point(
+                (json['cubicPointTwo'] as Map<String, dynamic>)['x'] as double,
+                (json['cubicPointTwo'] as Map<String, dynamic>)['y'] as double,
+              ),
+        segmentEndPoint: json['segmentEndPoint'] == null
+            ? null
+            : Point(
+                (json['segmentEndPoint'] as Map<String, dynamic>)['x']
+                    as double,
+                (json['segmentEndPoint'] as Map<String, dynamic>)['y']
+                    as double,
+              ),
+      );
+
   /// Quadratic bezier curve point
   final Point<double>? quadracticPoint;
 

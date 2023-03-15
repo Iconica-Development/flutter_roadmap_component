@@ -70,8 +70,7 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
                     ),
                   ),
                 )
-                .values
-                .toList(),
+                .values,
             if (_selectedStep != null && widget.widgetBuilder != null) ...[
               // show a grey overlay
               InkWell(

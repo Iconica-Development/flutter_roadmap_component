@@ -20,6 +20,25 @@ class RoadmapTheme {
     this.markerShape = MarkerShape.circle,
   });
 
+  /// Creates a roadmap theme from json data that is camelCase
+  /// Colors are stored as ints in json, so they need to be converted
+  factory RoadmapTheme.fromJson(Map<String, dynamic> json) => RoadmapTheme(
+        lineColor:
+            json['lineColor'] == null ? null : Color(json['lineColor'] as int),
+        markerColor: json['markerColor'] == null
+            ? null
+            : Color(json['markerColor'] as int),
+        markerTextColor: json['markerTextColor'] == null
+            ? null
+            : Color(json['markerTextColor'] as int),
+        segmentTextColor: json['segmentTextColor'] == null
+            ? null
+            : Color(json['segmentTextColor'] as int),
+        overlayColor: json['overlayColor'] == null
+            ? null
+            : Color(json['overlayColor'] as int),
+      );
+
   final Color? lineColor;
   final Color? markerColor;
   final Color? markerTextColor;

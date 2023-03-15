@@ -4,6 +4,7 @@
 
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_roadmap/src/models/marker.dart';
 
@@ -16,6 +17,20 @@ class RoadmapPoint {
     this.widgetBuilder,
     this.markerShape,
   });
+
+  /// Creates a roadmap point from json data that is camelCase
+  factory RoadmapPoint.fromJson(Map<String, dynamic> json) => RoadmapPoint(
+        point: Point(
+          json['x'] as double,
+          json['y'] as double,
+        ),
+        text: json['text'] as String?,
+        markerShape: (json['markerShape'] == null)
+            ? null
+            : MarkerShape.values.firstWhereOrNull(
+                (element) => element.name == json['markerShape'],
+              ),
+      );
 
   /// The point on the roadmap with value between 0 and 1
   final Point<double> point;
