@@ -103,7 +103,7 @@ class RoadmapPainter extends CustomPainter {
     required RoadmapData data,
     required Size size,
     required Offset position,
-    void Function(int lineIndex, int segmentIndex)? onSegmentHit,
+    void Function(int lineIndex, int? segmentIndex)? onSegmentHit,
   }) {
     var points = data.points;
     var lines = data.lines;
@@ -131,7 +131,7 @@ class RoadmapPainter extends CustomPainter {
               path,
             );
             if (rect.overlaps(path.getBounds())) {
-              onSegmentHit?.call(index, 0);
+              onSegmentHit?.call(index, null);
               return true;
             }
           } else {
@@ -151,7 +151,7 @@ class RoadmapPainter extends CustomPainter {
         } else {
           path.lineTo(point.point.x * size.width, point.point.y * size.height);
           if (rect.overlaps(path.getBounds())) {
-            onSegmentHit?.call(index, 0);
+            onSegmentHit?.call(index, null);
             return true;
           }
         }

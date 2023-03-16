@@ -23,7 +23,7 @@ class RoadmapEditor extends StatefulWidget {
   final Widget Function(int pointIndex, BuildContext context)? pointEditBuilder;
 
   /// widgetbuilder which gets the index of the point and returns a widget
-  final Widget Function(int lineIndex, int segmentIndex, BuildContext context)?
+  final Widget Function(int lineIndex, int? segmentIndex, BuildContext context)?
       lineEditBuilder;
 
   @override
