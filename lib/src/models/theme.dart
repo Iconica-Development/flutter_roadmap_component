@@ -13,6 +13,7 @@ class RoadmapTheme {
     this.markerTextColor,
     this.segmentTextColor,
     this.overlayColor,
+    this.pointDragColor,
     double? lineWidth,
     double? dashLength,
     double? dashSpace,
@@ -41,6 +42,9 @@ class RoadmapTheme {
         overlayColor: json['overlayColor'] == null
             ? null
             : Color(json['overlayColor'] as int),
+        pointDragColor: json['pointDragColor'] == null
+            ? null
+            : Color(json['pointDragColor'] as int),
         markerRadius: json['markerRadius'] == null
             ? null
             : json['markerRadius'] as double,
@@ -62,6 +66,9 @@ class RoadmapTheme {
   final Color? markerTextColor;
   final Color? segmentTextColor;
   final Color? overlayColor;
+
+  /// The color of the marker curve points for the RoadmapCreator
+  final Color? pointDragColor;
   final double markerRadius;
   final double lineWidth;
   final MarkerShape markerShape;
@@ -75,6 +82,7 @@ class RoadmapTheme {
         'markerColor': markerColor?.value,
         'markerTextColor': markerTextColor?.value,
         'segmentTextColor': segmentTextColor?.value,
+        'pointDragColor': pointDragColor?.value,
         'overlayColor': overlayColor?.value,
         'markerRadius': markerRadius,
         'lineWidth': lineWidth,
@@ -89,6 +97,7 @@ class RoadmapTheme {
     Color? markerTextColor,
     Color? segmentTextColor,
     Color? overlayColor,
+    Color? pointDragColor,
     double? markerRadius,
     double? lineWidth,
     MarkerShape? markerShape,
@@ -101,6 +110,7 @@ class RoadmapTheme {
       markerTextColor: markerTextColor ?? this.markerTextColor,
       segmentTextColor: segmentTextColor ?? this.segmentTextColor,
       overlayColor: overlayColor ?? this.overlayColor,
+      pointDragColor: pointDragColor ?? this.pointDragColor,
       markerRadius: markerRadius ?? this.markerRadius,
       lineWidth: lineWidth ?? this.lineWidth,
       markerShape: markerShape ?? this.markerShape,

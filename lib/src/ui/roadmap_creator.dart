@@ -103,49 +103,13 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                   });
                   return;
                 }
-                // check if there is a point at the location of the downclick
-                _controller.data = _controller.data.copyWith(
-                  points: [
-                    ..._controller.data.points,
-                    RoadmapPoint(
-                      point: Point(
-                        details.localPosition.dx / constraints.maxWidth,
-                        details.localPosition.dy / constraints.maxHeight,
-                      ),
-                    )
-                  ],
+                _controller.addPoint(
+                  Point(
+                    details.localPosition.dx / constraints.maxWidth,
+                    details.localPosition.dy / constraints.maxHeight,
+                  ),
                 );
                 // create a line between the last two points
-                if (_controller.data.points.length > 1) {
-                  _controller.data = _controller.data.copyWith(
-                    lines: [
-                      ..._controller.data.lines,
-                      RoadmapLine(
-                        segment: Segment(
-                          quadraticPoint: Point(
-                            (_controller
-                                        .data
-                                        .points[
-                                            _controller.data.points.length - 2]
-                                        .point
-                                        .x +
-                                    _controller.data.points.last.point.x) /
-                                2,
-                            (_controller
-                                        .data
-                                        .points[
-                                            _controller.data.points.length - 2]
-                                        .point
-                                        .y +
-                                    _controller.data.points.last.point.y) /
-                                2,
-                          ),
-                          segmentEndPoint: _controller.data.points.last.point,
-                        ),
-                      ),
-                    ],
-                  );
-                }
                 setState(() {});
                 localPosition = null;
               },
@@ -161,6 +125,7 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
               theme: widget.theme,
               widgetBuilder: (point, context) {
                 widget.pointEditBuilder?.call(point, context);
+                // default widget builder
                 return Container(
                   width: 100,
                   height: 100,
@@ -203,36 +168,41 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
     BoxConstraints constraints,
     Segment segment,
   ) {
-    var points = <Point>[];
+    var points = <String, Point>{};
     if (segment.quadraticPoint != null) {
-      points.add(segment.quadraticPoint!);
+      points['quadratic'] = segment.quadraticPoint!;
     }
     if (segment.cubicPointOne != null) {
-      points.add(segment.cubicPointOne!);
-      points.add(segment.cubicPointTwo!);
+      points['cubicOne'] = segment.cubicPointOne!;
+      points['cubicTwo'] = segment.cubicPointTwo!;
     }
     // if (segment.segmentEndPoint != null) {
     //   points.add(segment.segmentEndPoint!);
     // }
-    return points
-        .map(
-          (e) => Positioned(
-            top: e.y * constraints.maxHeight - widget.theme.markerRadius / 2,
-            left: e.x * constraints.maxWidth - widget.theme.markerRadius / 2,
-            child: GestureDetector(
-              onVerticalDragUpdate: (details) {
-                // update the position of the segment point
+    var widgets = <Widget>[];
+    points.forEach(
+      (key, e) => widgets.add(
+        Positioned(
+          top: e.y * constraints.maxHeight - widget.theme.markerRadius / 2,
+          left: e.x * constraints.maxWidth - widget.theme.markerRadius / 2,
+          child: GestureDetector(
+            onVerticalDragUpdate: (details) {
+              var currentPoint = getSegmentProperty(segment, key);
+              setState(() {
                 _controller.data = _controller.data.copyWith(
                   lines: _controller.data.lines
                       .map(
                         (line) => line == _controller.data.lines[_selectedLine!]
                             ? line.copyWith(
-                                segment: line.segment!.copyWith(
-                                  quadraticPoint: Point(
-                                    details.localPosition.dx /
-                                        constraints.maxWidth,
-                                    details.localPosition.dy /
-                                        constraints.maxHeight,
+                                segment: setSegmentProperty(
+                                  segment,
+                                  key,
+                                  Point(
+                                    currentPoint.x +
+                                        details.delta.dx / constraints.maxWidth,
+                                    currentPoint.y +
+                                        details.delta.dy /
+                                            constraints.maxHeight,
                                   ),
                                 ),
                               )
@@ -240,57 +210,78 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                       )
                       .toList(),
                 );
-                setState(() {});
-              },
-              onHorizontalDragUpdate: (details) {
-                // update the position of the segment point
+              });
+            },
+            onHorizontalDragUpdate: (details) {
+              var currentPoint = getSegmentProperty(segment, key);
+              setState(() {
                 _controller.data = _controller.data.copyWith(
-                  lines: List<RoadmapLine>.from(
-                    _controller.data.lines.map(
-                      (line) => line == _controller.data.lines[_selectedLine!]
-                          ? line.copyWith(
-                              segment: line.segment!.copyWith(
-                                quadraticPoint: Point(
-                                  details.localPosition.dx /
-                                      constraints.maxWidth,
-                                  details.localPosition.dy /
-                                      constraints.maxHeight,
+                  lines: _controller.data.lines
+                      .map(
+                        (line) => line == _controller.data.lines[_selectedLine!]
+                            ? line.copyWith(
+                                segment: setSegmentProperty(
+                                  segment,
+                                  key,
+                                  Point(
+                                    currentPoint.x +
+                                        details.delta.dx / constraints.maxWidth,
+                                    currentPoint.y +
+                                        details.delta.dy /
+                                            constraints.maxHeight,
+                                  ),
                                 ),
-                              ),
-                            )
-                          : line,
-                    ),
-                  ),
+                              )
+                            : line,
+                      )
+                      .toList(),
                 );
-                setState(() {});
-              },
-              child: Center(
-                child: Container(
-                  width: widget.theme.markerRadius,
-                  height: widget.theme.markerRadius,
-                  decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    shape: BoxShape.circle,
-                  ),
+              });
+            },
+            child: Center(
+              child: Container(
+                height: widget.theme.markerRadius,
+                width: widget.theme.markerRadius,
+                decoration: BoxDecoration(
+                  color: widget.theme.pointDragColor ?? Colors.grey,
+                  shape: BoxShape.circle,
                 ),
               ),
             ),
           ),
-        )
-        .toList();
+        ),
+      ),
+    );
+    return widgets;
   }
-}
 
-class RoadmapEditorController extends ChangeNotifier {
-  RoadmapEditorController({
-    RoadmapData? data,
-  }) : _data = data ?? const RoadmapData(lines: [], points: []);
-  RoadmapData _data;
+  Segment setSegmentProperty(
+    Segment segment,
+    String property,
+    Point<double> point,
+  ) {
+    switch (property) {
+      case 'quadratic':
+        return segment.copyWith(quadraticPoint: point);
+      case 'cubicOne':
+        return segment.copyWith(cubicPointOne: point);
+      case 'cubicTwo':
+        return segment.copyWith(cubicPointTwo: point);
+      default:
+        return segment;
+    }
+  }
 
-  RoadmapData get data => _data;
-
-  set data(RoadmapData data) {
-    _data = data;
-    notifyListeners();
+  Point getSegmentProperty(Segment segment, String property) {
+    switch (property) {
+      case 'quadratic':
+        return segment.quadraticPoint!;
+      case 'cubicOne':
+        return segment.cubicPointOne!;
+      case 'cubicTwo':
+        return segment.cubicPointTwo!;
+      default:
+        return const Point(0, 0);
+    }
   }
 }

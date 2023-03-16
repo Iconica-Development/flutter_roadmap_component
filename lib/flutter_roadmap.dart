@@ -6,6 +6,7 @@ library flutter_roadmap;
 
 export 'src/models/marker.dart';
 export 'src/models/roadmap_data.dart';
+export 'src/models/roadmap_editor_controller.dart';
 export 'src/models/roadmap_line.dart';
 export 'src/models/roadmap_point.dart';
 export 'src/models/segment.dart';
