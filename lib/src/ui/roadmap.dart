@@ -5,27 +5,40 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_roadmap/src/models/roadmap_line.dart';
-import 'package:flutter_roadmap/src/models/roadmap_point.dart';
+import 'package:flutter_roadmap/src/models/roadmap_data.dart';
 import 'package:flutter_roadmap/src/models/theme.dart';
 import 'package:flutter_roadmap/src/ui/widgets/roadmap_painter.dart';
 
 class RoadmapComponent extends StatefulWidget {
   const RoadmapComponent({
-    required this.points,
-    this.lines = const [],
+    required this.data,
     this.theme = const RoadmapTheme(),
     this.overlays = const [],
     this.widgetBuilder,
+    this.onTapDown,
+    this.onTapUp,
+    this.onDragStart,
+    this.onDragUpdate,
     super.key,
   });
 
-  final List<RoadmapPoint> points;
-  final List<RoadmapLine> lines;
+  final RoadmapData data;
   final RoadmapTheme theme;
   final List<Widget> overlays;
 
-  // widgetbuilder which gets the index of the point and returns a widget
+  /// onTapDown is used to detect clicks outside of the roadmap points
+  final GestureTapDownCallback? onTapDown;
+
+  /// onTapUp is used to detect clicks outside of the roadmap points
+  final GestureTapUpCallback? onTapUp;
+
+  /// onDragStart is used to detect drags outside of the roadmap points
+  final GestureDragStartCallback? onDragStart;
+
+  /// onDragUpdate is used to detect drags outside of the roadmap points
+  final void Function(DragUpdateDetails, BoxConstraints)? onDragUpdate;
+
+  /// widgetbuilder which gets the index of the point and returns a widget
   final Widget Function(int index, BuildContext context)? widgetBuilder;
 
   @override
@@ -41,17 +54,33 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
       builder: (context, constraints) {
         return Stack(
           children: [
-            InkWell(
-              hoverColor: Colors.transparent,
-              onTapDown: handleTapDown,
-              onTapUp: (details) => handleTapUp(details, constraints),
-              child: SizedBox.expand(
-                child: CustomPaint(
-                  painter: RoadmapPainter(
-                    points: widget.points,
-                    lines: widget.lines,
-                    theme: widget.theme,
-                    context: context,
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onHorizontalDragStart: (details) {
+                widget.onDragStart?.call(details);
+              },
+              onHorizontalDragUpdate: (details) {
+                widget.onDragUpdate?.call(details, constraints);
+              },
+              onHorizontalDragEnd: (details) {},
+              onVerticalDragStart: (details) {
+                widget.onDragStart?.call(details);
+              },
+              onVerticalDragUpdate: (details) {
+                widget.onDragUpdate?.call(details, constraints);
+              },
+              onVerticalDragEnd: (details) {},
+              child: InkWell(
+                hoverColor: Colors.transparent,
+                onTapDown: handleTapDown,
+                onTapUp: (details) => handleTapUp(details, constraints),
+                child: SizedBox.expand(
+                  child: CustomPaint(
+                    painter: RoadmapPainter(
+                      data: widget.data,
+                      theme: widget.theme,
+                      context: context,
+                    ),
                   ),
                 ),
               ),
@@ -102,8 +131,8 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
       // determine which point was tapped
       var selectedPoint = -1;
       // check if any of the points where tapped within a certain radius
-      for (var i = 0; i < widget.points.length; i++) {
-        var point = widget.points[i].point;
+      for (var i = 0; i < widget.data.points.length; i++) {
+        var point = widget.data.points[i].point;
         var radius = widget.theme.markerRadius *
             1.5; // 1.5x the radius to account for strange shapes
         var x = point.x * constraints.maxWidth;
@@ -116,6 +145,9 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
           break;
         }
       }
+      if (selectedPoint == -1) {
+        widget.onTapUp?.call(details);
+      }
       setState(() {
         _selectedStep = (selectedPoint != -1) ? selectedPoint : null;
       });
@@ -125,6 +157,6 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
   void handleTapDown(
     TapDownDetails details,
   ) {
-    debugPrint('tap down');
+    widget.onTapDown?.call(details);
   }
 }

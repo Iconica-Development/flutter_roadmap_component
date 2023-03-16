@@ -5,26 +5,25 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_roadmap/src/models/roadmap_line.dart';
-import 'package:flutter_roadmap/src/models/roadmap_point.dart';
+import 'package:flutter_roadmap/src/models/roadmap_data.dart';
 import 'package:flutter_roadmap/src/models/segment.dart';
 import 'package:flutter_roadmap/src/models/theme.dart';
 import 'package:flutter_roadmap/src/ui/widgets/marker_painter.dart';
 
 class RoadmapPainter extends CustomPainter {
   const RoadmapPainter({
-    required this.points,
-    required this.lines,
+    required this.data,
     required this.theme,
     required this.context,
   });
+  final RoadmapData data;
   final BuildContext context;
   final RoadmapTheme theme;
-  final List<RoadmapPoint> points;
-  final List<RoadmapLine> lines;
 
   @override
   void paint(Canvas canvas, Size size) {
+    var points = data.points;
+    var lines = data.lines;
     var paint = Paint()
       ..color = theme.lineColor ?? Theme.of(context).colorScheme.primary
       ..strokeWidth = theme.lineWidth
@@ -91,6 +90,12 @@ class RoadmapPainter extends CustomPainter {
             theme.markerColor ?? Theme.of(context).colorScheme.secondary;
         drawMarker(canvas, size, context, theme: theme, point: point, index: i);
       }
+    } else if (points.length == 1) {
+      // just draw a single point
+      var point = points[0];
+      paint.color =
+          theme.markerColor ?? Theme.of(context).colorScheme.secondary;
+      drawMarker(canvas, size, context, theme: theme, point: point, index: 0);
     }
   }
 
