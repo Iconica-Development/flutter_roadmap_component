@@ -9,14 +9,14 @@ import 'package:flutter/material.dart';
 @immutable
 class Segment {
   const Segment({
-    this.quadracticPoint,
+    this.quadraticPoint,
     this.cubicPointOne,
     this.cubicPointTwo,
     this.segmentEndPoint,
     this.text,
     this.showArrow,
   }) : assert(
-          quadracticPoint != null ||
+          quadraticPoint != null ||
               (cubicPointOne != null && cubicPointTwo != null),
           'Cannot have both quadracticPoint and cubicPointOne or cubicPointTwo',
         );
@@ -25,7 +25,7 @@ class Segment {
   factory Segment.fromJson(Map<String, dynamic> json) => Segment(
         text: json['text'] as String?,
         showArrow: json['showArrow'] as bool?,
-        quadracticPoint: json['quadracticPoint'] == null
+        quadraticPoint: json['quadracticPoint'] == null
             ? null
             : Point(
                 (json['quadracticPoint'] as Map<String, dynamic>)['x']
@@ -56,7 +56,7 @@ class Segment {
       );
 
   /// Quadratic bezier curve point
-  final Point<double>? quadracticPoint;
+  final Point<double>? quadraticPoint;
 
   /// First Cubic bezier curve point
   final Point<double>? cubicPointOne;
@@ -78,11 +78,11 @@ class Segment {
   Map<String, dynamic> toJson() => <String, dynamic>{
         'text': text,
         'showArrow': showArrow,
-        'quadracticPoint': quadracticPoint == null
+        'quadraticPoint': quadraticPoint == null
             ? null
             : <String, dynamic>{
-                'x': quadracticPoint!.x,
-                'y': quadracticPoint!.y,
+                'x': quadraticPoint!.x,
+                'y': quadraticPoint!.y,
               },
         'cubicPointOne': cubicPointOne == null
             ? null
@@ -105,7 +105,7 @@ class Segment {
       };
 
   Segment copyWith({
-    Point<double>? quadracticPoint,
+    Point<double>? quadraticPoint,
     Point<double>? cubicPointOne,
     Point<double>? cubicPointTwo,
     Point<double>? segmentEndPoint,
@@ -113,7 +113,7 @@ class Segment {
     bool? showArrow,
   }) {
     return Segment(
-      quadracticPoint: quadracticPoint ?? this.quadracticPoint,
+      quadraticPoint: quadraticPoint ?? this.quadraticPoint,
       cubicPointOne: cubicPointOne ?? this.cubicPointOne,
       cubicPointTwo: cubicPointTwo ?? this.cubicPointTwo,
       segmentEndPoint: segmentEndPoint ?? this.segmentEndPoint,

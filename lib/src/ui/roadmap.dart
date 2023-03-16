@@ -19,6 +19,7 @@ class RoadmapComponent extends StatefulWidget {
     this.onTapUp,
     this.onDragStart,
     this.onDragUpdate,
+    this.onSegmentHit,
     super.key,
   });
 
@@ -40,6 +41,8 @@ class RoadmapComponent extends StatefulWidget {
 
   /// widgetbuilder which gets the index of the point and returns a widget
   final Widget Function(int index, BuildContext context)? widgetBuilder;
+
+  final void Function(int lineIndex, int segmentIndex)? onSegmentHit;
 
   @override
   State<RoadmapComponent> createState() => _RoadmapComponentState();
@@ -80,6 +83,7 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
                       data: widget.data,
                       theme: widget.theme,
                       context: context,
+                      size: constraints.biggest,
                     ),
                   ),
                 ),
@@ -146,11 +150,22 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
         }
       }
       if (selectedPoint == -1) {
-        widget.onTapUp?.call(details);
+        // check if any of the lines where tapped
+        if (!RoadmapPainter.lineHitDetected(
+          data: widget.data,
+          size: constraints.biggest,
+          position: details.localPosition,
+          onSegmentHit: (lineIndex, segmentIndex) {
+            widget.onSegmentHit?.call(lineIndex, segmentIndex);
+          },
+        )) {
+          widget.onTapUp?.call(details);
+        }
+      } else {
+        setState(() {
+          _selectedStep = selectedPoint;
+        });
       }
-      setState(() {
-        _selectedStep = (selectedPoint != -1) ? selectedPoint : null;
-      });
     }
   }
 

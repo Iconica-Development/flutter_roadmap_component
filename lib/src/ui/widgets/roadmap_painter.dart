@@ -15,10 +15,12 @@ class RoadmapPainter extends CustomPainter {
     required this.data,
     required this.theme,
     required this.context,
+    required this.size,
   });
   final RoadmapData data;
   final BuildContext context;
   final RoadmapTheme theme;
+  final Size size;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -43,7 +45,6 @@ class RoadmapPainter extends CustomPainter {
           if (segmentLine.segment != null) {
             _drawSegment(
               segmentLine.segment!,
-              canvas,
               size,
               point.point,
               path,
@@ -52,7 +53,6 @@ class RoadmapPainter extends CustomPainter {
             for (var i = 0; i < segmentLine.segments!.length; i++) {
               _drawSegment(
                 segmentLine.segments![i],
-                canvas,
                 size,
                 segmentLine.segments![i].segmentEndPoint ?? point.point,
                 path,
@@ -99,39 +99,100 @@ class RoadmapPainter extends CustomPainter {
     }
   }
 
+  static bool lineHitDetected({
+    required RoadmapData data,
+    required Size size,
+    required Offset position,
+    void Function(int lineIndex, int segmentIndex)? onSegmentHit,
+  }) {
+    var points = data.points;
+    var lines = data.lines;
+    if (points.length > 1) {
+      var path = Path();
+      path.moveTo(
+        points[0].point.x * size.width,
+        points[0].point.y * size.height,
+      );
+      // for all points except the first
+      // path.contains is to narrow for hit testing so check multiple variants
+      var rect = Rect.fromCircle(
+        center: position,
+        radius: 1,
+      );
+      var index = 0;
+      for (var point in points.skip(1)) {
+        if (lines.length > index) {
+          var segmentLine = lines[index];
+          if (segmentLine.segment != null) {
+            _drawSegment(
+              segmentLine.segment!,
+              size,
+              point.point,
+              path,
+            );
+            if (rect.overlaps(path.getBounds())) {
+              onSegmentHit?.call(index, 0);
+              return true;
+            }
+          } else {
+            for (var i = 0; i < segmentLine.segments!.length; i++) {
+              _drawSegment(
+                segmentLine.segments![i],
+                size,
+                segmentLine.segments![i].segmentEndPoint ?? point.point,
+                path,
+              );
+              if (rect.overlaps(path.getBounds())) {
+                onSegmentHit?.call(index, i);
+                return true;
+              }
+            }
+          }
+        } else {
+          path.lineTo(point.point.x * size.width, point.point.y * size.height);
+          if (rect.overlaps(path.getBounds())) {
+            onSegmentHit?.call(index, 0);
+            return true;
+          }
+        }
+        index++;
+      }
+    }
+    return false;
+  }
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
+}
 
-  void _drawSegment(
-    Segment segment,
-    Canvas canvas,
-    Size size,
-    Point<double> end,
-    Path path,
-  ) {
-    if (segment.quadracticPoint != null) {
-      path.quadraticBezierTo(
-        segment.quadracticPoint!.x * size.width,
-        segment.quadracticPoint!.y * size.height,
-        end.x * size.width,
-        end.y * size.height,
-      );
-    } else if (segment.cubicPointOne != null && segment.cubicPointTwo != null) {
-      path.cubicTo(
-        segment.cubicPointOne!.x * size.width,
-        segment.cubicPointOne!.y * size.height,
-        segment.cubicPointTwo!.x * size.width,
-        segment.cubicPointTwo!.y * size.height,
-        end.x * size.width,
-        end.y * size.height,
-      );
-    } else {
-      path.lineTo(
-        end.x * size.width,
-        end.y * size.height,
-      );
-    }
+void _drawSegment(
+  Segment segment,
+  Size size,
+  Point<double> end,
+  Path path,
+) {
+  if (segment.quadraticPoint != null) {
+    path.quadraticBezierTo(
+      segment.quadraticPoint!.x * size.width,
+      segment.quadraticPoint!.y * size.height,
+      end.x * size.width,
+      end.y * size.height,
+    );
+  } else if (segment.cubicPointOne != null && segment.cubicPointTwo != null) {
+    path.cubicTo(
+      segment.cubicPointOne!.x * size.width,
+      segment.cubicPointOne!.y * size.height,
+      segment.cubicPointTwo!.x * size.width,
+      segment.cubicPointTwo!.y * size.height,
+      end.x * size.width,
+      end.y * size.height,
+    );
+  } else {
+    path.lineTo(
+      end.x * size.width,
+      end.y * size.height,
+    );
   }
 }

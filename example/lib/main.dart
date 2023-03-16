@@ -79,7 +79,7 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                 lines: [
                   RoadmapLine(
                     segment: Segment(
-                      quadracticPoint: Point(0.1, 0.62),
+                      quadraticPoint: Point(0.1, 0.62),
                       showArrow: true,
                     ),
                   ),
@@ -93,44 +93,44 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                   ),
                   RoadmapLine(
                     segment: Segment(
-                      quadracticPoint: Point(0.37, 0.15),
+                      quadraticPoint: Point(0.37, 0.15),
                       showArrow: true,
                     ),
                   ),
                   RoadmapLine(
                     segments: [
                       Segment(
-                        quadracticPoint: Point(0.5, 0.17),
+                        quadraticPoint: Point(0.5, 0.17),
                         showArrow: true,
                         text: 'Going strong',
                         segmentEndPoint: Point(0.5, 0.30),
                       ),
                       Segment(
-                        quadracticPoint: Point(0.42, 0.4),
+                        quadraticPoint: Point(0.42, 0.4),
                         segmentEndPoint: Point(0.42, 0.3),
                       ),
                       Segment(
-                        quadracticPoint: Point(0.5, 0.65),
+                        quadraticPoint: Point(0.5, 0.65),
                         segmentEndPoint: Point(0.5, 0.65),
                       ),
                     ],
                   ),
                   RoadmapLine(
                     segment: Segment(
-                      quadracticPoint: Point(0.65, 0.65),
+                      quadraticPoint: Point(0.65, 0.65),
                       showArrow: true,
                     ),
                   ),
                   RoadmapLine(
                     segment: Segment(
-                      quadracticPoint: Point(0.75, 0),
+                      quadraticPoint: Point(0.75, 0),
                       showArrow: true,
                       text: 'Almost there!',
                     ),
                   ),
                   RoadmapLine(
                     segment: Segment(
-                      quadracticPoint: Point(0.65, 0.9),
+                      quadraticPoint: Point(0.65, 0.9),
                       showArrow: true,
                     ),
                   ),
