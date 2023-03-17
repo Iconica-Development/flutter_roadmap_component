@@ -53,16 +53,10 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                         // button to delete the segment
                         TextButton(
                           onPressed: () {
-                            if (segmentIndex != null) {
-                              _controller.removeSegment(
-                                _controller.data.lines[lineIndex]
-                                    .segments![segmentIndex],
-                              );
-                            } else {
-                              _controller.removeSegment(
-                                _controller.data.lines[lineIndex].segment!,
-                              );
-                            }
+                            _controller.removeSegment(
+                              _controller
+                                  .data.lines[lineIndex].segments[segmentIndex],
+                            );
                           },
                           child: const Text('Remove segment'),
                         ),
@@ -72,16 +66,11 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                         // button to add a segment
                         TextButton(
                           onPressed: () {
-                            if (segmentIndex != null) {
-                              _controller.splitSegment(
-                                _controller.data.lines[lineIndex]
-                                    .segments![segmentIndex],
-                              );
-                            } else {
-                              _controller.splitSegment(
-                                _controller.data.lines[lineIndex].segment!,
-                              );
-                            }
+                            _controller.splitSegment(
+                              _controller
+                                  .data.lines[lineIndex].segments[segmentIndex],
+                            );
+                            setState(() {});
                           },
                           child: const Text('Split segment'),
                         ),
@@ -92,21 +81,13 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                         // button to switch the segment type
                         TextButton(
                           onPressed: () {
-                            if (segmentIndex != null) {
-                              _controller.changeSegmentCurveType(
-                                _controller.data.lines[lineIndex]
-                                    .segments![segmentIndex],
-                                lineIndex,
-                                segmentIndex,
-                              );
-                            } else {
-                              _controller.changeSegmentCurveType(
-                                _controller.data.lines[lineIndex].segment!,
-                                lineIndex,
-                                segmentIndex,
-                              );
-                              setState(() {});
-                            }
+                            _controller.changeSegmentCurveType(
+                              _controller
+                                  .data.lines[lineIndex].segments[segmentIndex],
+                              lineIndex,
+                              segmentIndex,
+                            );
+                            setState(() {});
                           },
                           child: const Text('Change segment type'),
                         ),
@@ -149,24 +130,30 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                 ],
                 lines: [
                   RoadmapLine(
-                    segment: Segment(
-                      quadraticPoint: Point(0.1, 0.62),
-                      showArrow: true,
-                    ),
+                    segments: [
+                      Segment(
+                        quadraticPoint: Point(0.1, 0.62),
+                        showArrow: true,
+                      ),
+                    ],
                   ),
                   RoadmapLine(
-                    segment: Segment(
-                      cubicPointOne: Point(0.22, 0.22),
-                      cubicPointTwo: Point(0.23, 0.5),
-                      showArrow: true,
-                      text: 'Doing good',
-                    ),
+                    segments: [
+                      Segment(
+                        cubicPointOne: Point(0.22, 0.22),
+                        cubicPointTwo: Point(0.23, 0.5),
+                        showArrow: true,
+                        text: 'Doing good',
+                      ),
+                    ],
                   ),
                   RoadmapLine(
-                    segment: Segment(
-                      quadraticPoint: Point(0.37, 0.15),
-                      showArrow: true,
-                    ),
+                    segments: [
+                      Segment(
+                        quadraticPoint: Point(0.37, 0.15),
+                        showArrow: true,
+                      ),
+                    ],
                   ),
                   RoadmapLine(
                     segments: [
@@ -187,23 +174,29 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                     ],
                   ),
                   RoadmapLine(
-                    segment: Segment(
-                      quadraticPoint: Point(0.65, 0.65),
-                      showArrow: true,
-                    ),
+                    segments: [
+                      Segment(
+                        quadraticPoint: Point(0.65, 0.65),
+                        showArrow: true,
+                      ),
+                    ],
                   ),
                   RoadmapLine(
-                    segment: Segment(
-                      quadraticPoint: Point(0.75, 0),
-                      showArrow: true,
-                      text: 'Almost there!',
-                    ),
+                    segments: [
+                      Segment(
+                        quadraticPoint: Point(0.75, 0),
+                        showArrow: true,
+                        text: 'Almost there!',
+                      ),
+                    ],
                   ),
                   RoadmapLine(
-                    segment: Segment(
-                      quadraticPoint: Point(0.65, 0.9),
-                      showArrow: true,
-                    ),
+                    segments: [
+                      Segment(
+                        quadraticPoint: Point(0.65, 0.9),
+                        showArrow: true,
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -23,7 +23,7 @@ class RoadmapEditor extends StatefulWidget {
   final Widget Function(int pointIndex, BuildContext context)? pointEditBuilder;
 
   /// widgetbuilder which gets the index of the point and returns a widget
-  final Widget Function(int lineIndex, int? segmentIndex, BuildContext context)?
+  final Widget Function(int lineIndex, int segmentIndex, BuildContext context)?
       lineEditBuilder;
 
   @override
@@ -136,27 +136,18 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
             ),
             // Add toplayer with
             // draw circles at the point of the line
-            if (_selectedLine != null) ...[
+            if (_selectedLine != null && _selectedSegment != null) ...[
               widget.lineEditBuilder?.call(
                     _selectedLine!,
-                    _selectedSegment,
+                    _selectedSegment!,
                     context,
                   ) ??
                   Container(),
-              if (_controller.data.lines[_selectedLine!].segment != null) ...[
-                ...drawSegmentLinePoints(
-                  constraints,
-                  _controller.data.lines[_selectedLine!].segment!,
-                ),
-              ],
-              if (_controller.data.lines[_selectedLine!].segments != null) ...[
-                ..._controller.data.lines[_selectedLine!].segments!.expand(
-                  (element) => drawSegmentLinePoints(
-                    constraints,
-                    element,
-                  ),
-                ),
-              ],
+              ...drawSegmentLinePoints(
+                constraints,
+                _controller
+                    .data.lines[_selectedLine!].segments[_selectedSegment!],
+              ),
             ],
           ],
         );
@@ -194,17 +185,24 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                       .map(
                         (line) => line == _controller.data.lines[_selectedLine!]
                             ? line.copyWith(
-                                segment: setSegmentProperty(
-                                  segment,
-                                  key,
-                                  Point(
-                                    currentPoint.x +
-                                        details.delta.dx / constraints.maxWidth,
-                                    currentPoint.y +
-                                        details.delta.dy /
-                                            constraints.maxHeight,
+                                segments: [
+                                  ...line.segments
+                                      .sublist(0, _selectedSegment!),
+                                  setSegmentProperty(
+                                    segment,
+                                    key,
+                                    Point(
+                                      currentPoint.x +
+                                          details.delta.dx /
+                                              constraints.maxWidth,
+                                      currentPoint.y +
+                                          details.delta.dy /
+                                              constraints.maxHeight,
+                                    ),
                                   ),
-                                ),
+                                  ...line.segments
+                                      .sublist(_selectedSegment! + 1),
+                                ],
                               )
                             : line,
                       )
@@ -220,17 +218,24 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                       .map(
                         (line) => line == _controller.data.lines[_selectedLine!]
                             ? line.copyWith(
-                                segment: setSegmentProperty(
-                                  segment,
-                                  key,
-                                  Point(
-                                    currentPoint.x +
-                                        details.delta.dx / constraints.maxWidth,
-                                    currentPoint.y +
-                                        details.delta.dy /
-                                            constraints.maxHeight,
+                                segments: [
+                                  ...line.segments
+                                      .sublist(0, _selectedSegment!),
+                                  setSegmentProperty(
+                                    segment,
+                                    key,
+                                    Point(
+                                      currentPoint.x +
+                                          details.delta.dx /
+                                              constraints.maxWidth,
+                                      currentPoint.y +
+                                          details.delta.dy /
+                                              constraints.maxHeight,
+                                    ),
                                   ),
-                                ),
+                                  ...line.segments
+                                      .sublist(_selectedSegment! + 1),
+                                ],
                               )
                             : line,
                       )

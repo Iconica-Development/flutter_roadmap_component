@@ -42,7 +42,7 @@ class RoadmapComponent extends StatefulWidget {
   /// widgetbuilder which gets the index of the point and returns a widget
   final Widget Function(int index, BuildContext context)? widgetBuilder;
 
-  final void Function(int lineIndex, int? segmentIndex)? onSegmentHit;
+  final void Function(int lineIndex, int segmentIndex)? onSegmentHit;
 
   @override
   State<RoadmapComponent> createState() => _RoadmapComponentState();

@@ -22,13 +22,13 @@ class RoadmapEditorController extends ChangeNotifier {
   void changeSegmentCurveType(
     Segment segment,
     int lineIndex,
-    int? segmentIndex,
+    int segmentIndex,
   ) {
     if (segment.quadraticPoint != null) {
       // change the segment to a cubic curve
 
-      var previousPoint = (segmentIndex != null)
-          ? data.lines[lineIndex].segments![segmentIndex - 1].segmentEndPoint!
+      var previousPoint = (segmentIndex != 0)
+          ? data.lines[lineIndex].segments[segmentIndex - 1].segmentEndPoint!
           : data.points[lineIndex].point;
       var updatedSegment = segment.copyWith(
         removeQuadratic: true,
@@ -41,31 +41,19 @@ class RoadmapEditorController extends ChangeNotifier {
           (previousPoint.y + segment.segmentEndPoint!.y) / 2,
         ),
       );
-      if (segmentIndex != null) {
-        data = data.copyWith(
-          lines: [
-            ...data.lines.sublist(0, lineIndex),
-            data.lines[lineIndex].copyWith(
-              segments: [
-                ...data.lines[lineIndex].segments!.sublist(0, segmentIndex),
-                updatedSegment,
-                ...data.lines[lineIndex].segments!.sublist(segmentIndex + 1),
-              ],
-            ),
-            ...data.lines.sublist(lineIndex + 1),
-          ],
-        );
-      } else {
-        data = data.copyWith(
-          lines: [
-            ...data.lines.sublist(0, lineIndex),
-            RoadmapLine(
-              segment: updatedSegment,
-            ),
-            ...data.lines.sublist(lineIndex + 1),
-          ],
-        );
-      }
+      data = data.copyWith(
+        lines: [
+          ...data.lines.sublist(0, lineIndex),
+          data.lines[lineIndex].copyWith(
+            segments: [
+              ...data.lines[lineIndex].segments.sublist(0, segmentIndex),
+              updatedSegment,
+              ...data.lines[lineIndex].segments.sublist(segmentIndex + 1),
+            ],
+          ),
+          ...data.lines.sublist(lineIndex + 1),
+        ],
+      );
     } else {
       // change the segment to a quadratic curve
     }
@@ -93,17 +81,19 @@ class RoadmapEditorController extends ChangeNotifier {
         lines: [
           ...data.lines,
           RoadmapLine(
-            segment: Segment(
-              quadraticPoint: Point(
-                (data.points[data.points.length - 2].point.x +
-                        data.points.last.point.x) /
-                    2,
-                (data.points[data.points.length - 2].point.y +
-                        data.points.last.point.y) /
-                    2,
+            segments: [
+              Segment(
+                quadraticPoint: Point(
+                  (data.points[data.points.length - 2].point.x +
+                          data.points.last.point.x) /
+                      2,
+                  (data.points[data.points.length - 2].point.y +
+                          data.points.last.point.y) /
+                      2,
+                ),
+                segmentEndPoint: data.points.last.point,
               ),
-              segmentEndPoint: data.points.last.point,
-            ),
+            ],
           ),
         ],
       );

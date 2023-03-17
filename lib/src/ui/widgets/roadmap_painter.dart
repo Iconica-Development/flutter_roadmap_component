@@ -42,22 +42,14 @@ class RoadmapPainter extends CustomPainter {
       for (var point in points.skip(1)) {
         if (lines.length > index) {
           var segmentLine = lines[index];
-          if (segmentLine.segment != null) {
+
+          for (var i = 0; i < segmentLine.segments.length; i++) {
             _drawSegment(
-              segmentLine.segment!,
+              segmentLine.segments[i],
               size,
-              point.point,
+              segmentLine.segments[i].segmentEndPoint ?? point.point,
               path,
             );
-          } else {
-            for (var i = 0; i < segmentLine.segments!.length; i++) {
-              _drawSegment(
-                segmentLine.segments![i],
-                size,
-                segmentLine.segments![i].segmentEndPoint ?? point.point,
-                path,
-              );
-            }
           }
         } else {
           path.lineTo(point.point.x * size.width, point.point.y * size.height);
@@ -103,7 +95,7 @@ class RoadmapPainter extends CustomPainter {
     required RoadmapData data,
     required Size size,
     required Offset position,
-    void Function(int lineIndex, int? segmentIndex)? onSegmentHit,
+    void Function(int lineIndex, int segmentIndex)? onSegmentHit,
   }) {
     var points = data.points;
     var lines = data.lines;
@@ -123,35 +115,22 @@ class RoadmapPainter extends CustomPainter {
       for (var point in points.skip(1)) {
         if (lines.length > index) {
           var segmentLine = lines[index];
-          if (segmentLine.segment != null) {
+          for (var i = 0; i < segmentLine.segments.length; i++) {
             _drawSegment(
-              segmentLine.segment!,
+              segmentLine.segments[i],
               size,
-              point.point,
+              segmentLine.segments[i].segmentEndPoint ?? point.point,
               path,
             );
             if (rect.overlaps(path.getBounds())) {
-              onSegmentHit?.call(index, null);
+              onSegmentHit?.call(index, i);
               return true;
-            }
-          } else {
-            for (var i = 0; i < segmentLine.segments!.length; i++) {
-              _drawSegment(
-                segmentLine.segments![i],
-                size,
-                segmentLine.segments![i].segmentEndPoint ?? point.point,
-                path,
-              );
-              if (rect.overlaps(path.getBounds())) {
-                onSegmentHit?.call(index, i);
-                return true;
-              }
             }
           }
         } else {
           path.lineTo(point.point.x * size.width, point.point.y * size.height);
           if (rect.overlaps(path.getBounds())) {
-            onSegmentHit?.call(index, null);
+            onSegmentHit?.call(index, 0);
             return true;
           }
         }
