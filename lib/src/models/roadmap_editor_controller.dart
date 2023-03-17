@@ -24,13 +24,14 @@ class RoadmapEditorController extends ChangeNotifier {
     int lineIndex,
     int segmentIndex,
   ) {
+    var previousPoint = (segmentIndex != 0)
+        ? data.lines[lineIndex].segments[segmentIndex - 1].segmentEndPoint!
+        : data.points[lineIndex].point;
+    Segment updatedSegment;
+
     if (segment.quadraticPoint != null) {
       // change the segment to a cubic curve
-
-      var previousPoint = (segmentIndex != 0)
-          ? data.lines[lineIndex].segments[segmentIndex - 1].segmentEndPoint!
-          : data.points[lineIndex].point;
-      var updatedSegment = segment.copyWith(
+      updatedSegment = segment.copyWith(
         removeQuadratic: true,
         cubicPointOne: Point(
           (previousPoint.x + segment.segmentEndPoint!.x) / 2 + 0.01,
@@ -41,30 +42,91 @@ class RoadmapEditorController extends ChangeNotifier {
           (previousPoint.y + segment.segmentEndPoint!.y) / 2,
         ),
       );
+    } else {
+      // change the segment to a quadratic curve
+      updatedSegment = segment.copyWith(
+        removeCubic: true,
+        quadraticPoint: Point(
+          (previousPoint.x + segment.segmentEndPoint!.x) / 2,
+          (previousPoint.y + segment.segmentEndPoint!.y) / 2,
+        ),
+      );
+    }
+    data = data.copyWith(
+      lines: [
+        ...data.lines.sublist(0, lineIndex),
+        data.lines[lineIndex].copyWith(
+          segments: [
+            ...data.lines[lineIndex].segments.sublist(0, segmentIndex),
+            updatedSegment,
+            ...data.lines[lineIndex].segments.sublist(segmentIndex + 1),
+          ],
+        ),
+        ...data.lines.sublist(lineIndex + 1),
+      ],
+    );
+  }
+
+  void splitSegment(Segment segment, int lineIndex, int segmentIndex) {
+    // split the segment into two segments
+  }
+
+  void removeSegment(Segment segment, int lineIndex, int segmentIndex) {
+    // remove the segment
+    if (segmentIndex == 0 && data.lines[lineIndex].segments.length == 1) {
+      // remove the line
+      data = data.copyWith(
+        lines: [
+          ...data.lines.sublist(0, lineIndex),
+          RoadmapLine(
+            segments: [
+              segment.copyWith(removeQuadratic: true, removeCubic: true),
+            ],
+          ),
+          ...data.lines.sublist(lineIndex + 1),
+        ],
+      );
+    } else if (segmentIndex == 0) {
+      // remove the first segment
+      data = data.copyWith(
+        lines: [
+          ...data.lines.sublist(0, lineIndex),
+          data.lines[lineIndex].copyWith(
+            segments: [
+              ...data.lines[lineIndex].segments.sublist(1),
+            ],
+          ),
+          ...data.lines.sublist(lineIndex + 1),
+        ],
+      );
+    } else if (segmentIndex == data.lines[lineIndex].segments.length - 1) {
+      // remove the last segment
       data = data.copyWith(
         lines: [
           ...data.lines.sublist(0, lineIndex),
           data.lines[lineIndex].copyWith(
             segments: [
               ...data.lines[lineIndex].segments.sublist(0, segmentIndex),
-              updatedSegment,
-              ...data.lines[lineIndex].segments.sublist(segmentIndex + 1),
             ],
           ),
           ...data.lines.sublist(lineIndex + 1),
         ],
       );
     } else {
-      // change the segment to a quadratic curve
+      // remove a middle segment
+      data = data.copyWith(
+        lines: [
+          ...data.lines.sublist(0, lineIndex),
+          data.lines[lineIndex].copyWith(
+            segments: [
+              ...data.lines[lineIndex].segments.sublist(0, segmentIndex),
+              ...data.lines[lineIndex].segments.sublist(segmentIndex + 1),
+            ],
+          ),
+          ...data.lines.sublist(lineIndex + 1),
+        ],
+      );
     }
-  }
-
-  void splitSegment(Segment segment) {
-    // split the segment into two segments
-  }
-
-  void removeSegment(Segment segment) {
-    // remove the segment
   }
 
   void addPoint(Point<double> point) {

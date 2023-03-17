@@ -16,8 +16,8 @@ class Segment {
     this.text,
     this.showArrow,
   }) : assert(
-          quadraticPoint != null ||
-              (cubicPointOne != null && cubicPointTwo != null),
+          !(quadraticPoint != null &&
+              (cubicPointOne != null && cubicPointTwo != null)),
           'Cannot have both quadracticPoint and cubicPointOne or cubicPointTwo',
         );
 

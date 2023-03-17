@@ -56,7 +56,10 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                             _controller.removeSegment(
                               _controller
                                   .data.lines[lineIndex].segments[segmentIndex],
+                              lineIndex,
+                              segmentIndex,
                             );
+                            setState(() {});
                           },
                           child: const Text('Remove segment'),
                         ),
@@ -69,6 +72,8 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                             _controller.splitSegment(
                               _controller
                                   .data.lines[lineIndex].segments[segmentIndex],
+                              lineIndex,
+                              segmentIndex,
                             );
                             setState(() {});
                           },
