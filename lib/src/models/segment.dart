@@ -111,11 +111,14 @@ class Segment {
     Point<double>? segmentEndPoint,
     String? text,
     bool? showArrow,
+    bool removeQuadratic = false,
+    bool removeCubic = false,
   }) {
     return Segment(
-      quadraticPoint: quadraticPoint ?? this.quadraticPoint,
-      cubicPointOne: cubicPointOne ?? this.cubicPointOne,
-      cubicPointTwo: cubicPointTwo ?? this.cubicPointTwo,
+      quadraticPoint:
+          removeQuadratic ? null : quadraticPoint ?? this.quadraticPoint,
+      cubicPointOne: removeCubic ? null : cubicPointOne ?? this.cubicPointOne,
+      cubicPointTwo: removeCubic ? null : cubicPointTwo ?? this.cubicPointTwo,
       segmentEndPoint: segmentEndPoint ?? this.segmentEndPoint,
       text: text ?? this.text,
       showArrow: showArrow ?? this.showArrow,

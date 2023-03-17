@@ -45,59 +45,73 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
                 dashSpace: 15,
               ),
               lineEditBuilder: (lineIndex, segmentIndex, context) {
-                return Container(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      // button to delete the segment
-                      GestureDetector(
-                        onTap: () {
-                          if (segmentIndex != null) {
-                            _controller.removeSegment(
-                              _controller.data.lines[lineIndex]
-                                  .segments![segmentIndex],
-                            );
-                          } else {
-                            _controller.removeSegment(
-                              _controller.data.lines[lineIndex].segment!,
-                            );
-                          }
-                        },
-                        child: const Icon(Icons.delete),
-                      ),
-                      // button to add a segment
-                      GestureDetector(
-                        onTap: () {
-                          if (segmentIndex != null) {
-                            _controller.splitSegment(
-                              _controller.data.lines[lineIndex]
-                                  .segments![segmentIndex],
-                            );
-                          } else {
-                            _controller.splitSegment(
-                              _controller.data.lines[lineIndex].segment!,
-                            );
-                          }
-                        },
-                        child: const Icon(Icons.add),
-                      ),
-                      // button to switch the segment type
-                      GestureDetector(
-                        onTap: () {
-                          if (segmentIndex != null) {
-                            _controller.changeSegmentCurveType(
-                              _controller.data.lines[lineIndex]
-                                  .segments![segmentIndex],
-                            );
-                          } else {
-                            _controller.changeSegmentCurveType(
-                              _controller.data.lines[lineIndex].segment!,
-                            );
-                          }
-                        },
-                        child: const Icon(Icons.swap_horiz),
-                      ),
-                    ],
+                return Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        // button to delete the segment
+                        TextButton(
+                          onPressed: () {
+                            if (segmentIndex != null) {
+                              _controller.removeSegment(
+                                _controller.data.lines[lineIndex]
+                                    .segments![segmentIndex],
+                              );
+                            } else {
+                              _controller.removeSegment(
+                                _controller.data.lines[lineIndex].segment!,
+                              );
+                            }
+                          },
+                          child: const Text('Remove segment'),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+                        // button to add a segment
+                        TextButton(
+                          onPressed: () {
+                            if (segmentIndex != null) {
+                              _controller.splitSegment(
+                                _controller.data.lines[lineIndex]
+                                    .segments![segmentIndex],
+                              );
+                            } else {
+                              _controller.splitSegment(
+                                _controller.data.lines[lineIndex].segment!,
+                              );
+                            }
+                          },
+                          child: const Text('Split segment'),
+                        ),
+                        SizedBox(
+                          height: size.height * 0.01,
+                        ),
+
+                        // button to switch the segment type
+                        TextButton(
+                          onPressed: () {
+                            if (segmentIndex != null) {
+                              _controller.changeSegmentCurveType(
+                                _controller.data.lines[lineIndex]
+                                    .segments![segmentIndex],
+                                lineIndex,
+                                segmentIndex,
+                              );
+                            } else {
+                              _controller.changeSegmentCurveType(
+                                _controller.data.lines[lineIndex].segment!,
+                                lineIndex,
+                                segmentIndex,
+                              );
+                              setState(() {});
+                            }
+                          },
+                          child: const Text('Change segment type'),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

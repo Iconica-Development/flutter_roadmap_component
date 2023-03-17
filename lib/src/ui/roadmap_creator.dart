@@ -139,7 +139,7 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
             if (_selectedLine != null) ...[
               widget.lineEditBuilder?.call(
                     _selectedLine!,
-                    _selectedSegment ?? 0,
+                    _selectedSegment,
                     context,
                   ) ??
                   Container(),
