@@ -5,6 +5,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_roadmap/src/models/roadmap_controller.dart';
 import 'package:flutter_roadmap/src/models/roadmap_data.dart';
 import 'package:flutter_roadmap/src/models/segment.dart';
 import 'package:flutter_roadmap/src/models/theme.dart';
@@ -12,18 +13,19 @@ import 'package:flutter_roadmap/src/ui/widgets/marker_painter.dart';
 
 class RoadmapPainter extends CustomPainter {
   const RoadmapPainter({
-    required this.data,
+    required this.controller,
     required this.theme,
     required this.context,
     required this.size,
   });
-  final RoadmapData data;
+  final RoadmapController controller;
   final BuildContext context;
   final RoadmapTheme theme;
   final Size size;
 
   @override
   void paint(Canvas canvas, Size size) {
+    var data = controller.data;
     var points = data.points;
     var lines = data.lines;
     var paint = Paint()
@@ -79,19 +81,21 @@ class RoadmapPainter extends CustomPainter {
       if (data.selectedLine != null) {
         _drawHighlightedSegment(canvas, paint);
       }
-
+    }
+    if (points.isNotEmpty) {
+      // draw all points
       for (var i = 0; i < points.length; i++) {
         var point = points[i];
-        paint.color =
-            theme.markerColor ?? Theme.of(context).colorScheme.secondary;
-        drawMarker(canvas, size, context, theme: theme, point: point, index: i);
+        drawMarker(
+          canvas,
+          size,
+          context,
+          theme: theme,
+          point: point,
+          index: i,
+          isSelected: data.selectedPoint == i,
+        );
       }
-    } else if (points.length == 1) {
-      // just draw a single point
-      var point = points[0];
-      paint.color =
-          theme.markerColor ?? Theme.of(context).colorScheme.secondary;
-      drawMarker(canvas, size, context, theme: theme, point: point, index: 0);
     }
   }
 
@@ -145,6 +149,7 @@ class RoadmapPainter extends CustomPainter {
   }
 
   void _drawHighlightedSegment(Canvas canvas, Paint paint) {
+    var data = controller.data;
     var segment =
         data.lines[data.selectedLine!].segments[data.selectedSegment!];
     // previous point of the segment

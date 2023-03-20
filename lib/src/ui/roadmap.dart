@@ -5,13 +5,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_roadmap/src/models/roadmap_data.dart';
+import 'package:flutter_roadmap/src/models/roadmap_controller.dart';
 import 'package:flutter_roadmap/src/models/theme.dart';
 import 'package:flutter_roadmap/src/ui/widgets/roadmap_painter.dart';
 
 class RoadmapComponent extends StatefulWidget {
   const RoadmapComponent({
-    required this.data,
+    required this.controller,
     this.theme = const RoadmapTheme(),
     this.overlays = const [],
     this.widgetBuilder,
@@ -23,7 +23,7 @@ class RoadmapComponent extends StatefulWidget {
     super.key,
   });
 
-  final RoadmapData data;
+  final RoadmapController controller;
   final RoadmapTheme theme;
   final List<Widget> overlays;
 
@@ -49,8 +49,6 @@ class RoadmapComponent extends StatefulWidget {
 }
 
 class _RoadmapComponentState extends State<RoadmapComponent> {
-  int? _selectedStep;
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -80,7 +78,7 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
                 child: SizedBox.expand(
                   child: CustomPaint(
                     painter: RoadmapPainter(
-                      data: widget.data,
+                      controller: widget.controller,
                       theme: widget.theme,
                       context: context,
                       size: constraints.biggest,
@@ -104,7 +102,8 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
                   ),
                 )
                 .values,
-            if (_selectedStep != null && widget.widgetBuilder != null) ...[
+            if (widget.controller.data.selectedPoint != null &&
+                widget.widgetBuilder != null) ...[
               InkWell(
                 onTapUp: (details) => handleTapUp(details, constraints),
                 onTapDown: handleTapDown,
@@ -114,7 +113,12 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
                       widget.theme.overlayColor ?? Colors.grey.withOpacity(0.7),
                 ),
               ),
-              Center(child: widget.widgetBuilder!(_selectedStep!, context)),
+              Center(
+                child: widget.widgetBuilder?.call(
+                  widget.controller.data.selectedPoint!,
+                  context,
+                ),
+              ),
             ],
           ],
         );
@@ -126,16 +130,18 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
     TapUpDetails details,
     BoxConstraints constraints,
   ) {
-    if (_selectedStep != null) {
+    if (widget.controller.data.selectedPoint != null) {
       setState(() {
-        _selectedStep = null;
+        widget.controller.data = widget.controller.data.copyWith(
+          clearSelection: true,
+        );
       });
     } else {
       // determine which point was tapped
       var selectedPoint = -1;
       // check if any of the points where tapped within a certain radius
-      for (var i = 0; i < widget.data.points.length; i++) {
-        var point = widget.data.points[i].point;
+      for (var i = 0; i < widget.controller.data.points.length; i++) {
+        var point = widget.controller.data.points[i].point;
         var radius = widget.theme.markerRadius *
             1.5; // 1.5x the radius to account for strange shapes
         var x = point.x * constraints.maxWidth;
@@ -151,18 +157,28 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
       if (selectedPoint == -1) {
         // check if any of the lines where tapped
         if (!RoadmapPainter.lineHitDetected(
-          data: widget.data,
+          data: widget.controller.data,
           size: constraints.biggest,
           position: details.localPosition,
           onSegmentHit: (lineIndex, segmentIndex) {
             widget.onSegmentHit?.call(lineIndex, segmentIndex);
           },
         )) {
+          setState(() {
+            widget.controller.data = widget.controller.data.copyWith(
+              clearSelection: true,
+              selectedSegment: widget.controller.data.selectedSegment,
+              selectedLine: widget.controller.data.selectedLine,
+            );
+          });
           widget.onTapUp?.call(details);
         }
       } else {
         setState(() {
-          _selectedStep = selectedPoint;
+          widget.controller.data = widget.controller.data.copyWith(
+            selectedPoint: selectedPoint,
+            clearSelection: true,
+          );
         });
       }
     }

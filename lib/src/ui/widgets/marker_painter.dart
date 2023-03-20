@@ -16,10 +16,13 @@ void drawMarker(
   required RoadmapTheme theme,
   required RoadmapPoint point,
   required int index,
+  bool isSelected = false,
 }) {
   var markerShape = point.markerShape ?? theme.markerShape;
   var paint = Paint()
-    ..color = theme.markerColor ?? Theme.of(context).colorScheme.secondary
+    ..color = isSelected
+        ? theme.selectedMarkerColor ?? Theme.of(context).colorScheme.primary
+        : theme.markerColor ?? Theme.of(context).colorScheme.secondary
     ..strokeWidth = theme.lineWidth
     ..style = PaintingStyle.fill;
 

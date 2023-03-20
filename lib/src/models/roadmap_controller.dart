@@ -10,8 +10,8 @@ import 'package:flutter_roadmap/src/models/roadmap_line.dart';
 import 'package:flutter_roadmap/src/models/roadmap_point.dart';
 import 'package:flutter_roadmap/src/models/segment.dart';
 
-class RoadmapEditorController extends ChangeNotifier {
-  RoadmapEditorController({
+class RoadmapController extends ChangeNotifier {
+  RoadmapController({
     RoadmapData? data,
   }) : _data = data ?? const RoadmapData(lines: [], points: []);
   RoadmapData _data;

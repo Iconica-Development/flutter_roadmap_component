@@ -22,7 +22,17 @@ class FlutterRoadmapDemo extends StatefulWidget {
 
 class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
   bool _showCreator = true;
-  final RoadmapEditorController _controller = RoadmapEditorController();
+  final RoadmapController _controller = RoadmapController();
+
+  final RoadmapTheme theme = const RoadmapTheme(
+    lineColor: Color.fromARGB(255, 30, 8, 111),
+    selectedMarkerColor: Colors.green,
+    markerColor: RoadmapColorTheme.primaryColor,
+    markerTextColor: Colors.white,
+    markerShape: MarkerShape.hexagon,
+    dashLength: 30,
+    dashSpace: 15,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +45,8 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
           if (_showCreator) ...[
             RoadmapEditor(
               controller: _controller,
-              theme: RoadmapTheme(
-                lineColor: const Color.fromARGB(255, 30, 8, 111),
-                markerColor: RoadmapColorTheme.primaryColor,
-                markerTextColor: Colors.white,
-                markerShape: MarkerShape.hexagon,
+              theme: theme.copyWith(
                 lineWidth: min(size.width, size.height) / 150,
-                dashLength: 30,
-                dashSpace: 15,
               ),
               lineEditBuilder: (lineIndex, segmentIndex, context) {
                 return Center(
@@ -104,115 +108,111 @@ class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
             ),
           ] else ...[
             RoadmapComponent(
-              data: const RoadmapData(
-                points: [
-                  RoadmapPoint(
-                    markerShape: MarkerShape.circle,
-                    point: Point(0.05, 0.6),
-                  ),
-                  RoadmapPoint(
-                    point: Point(0.18, 0.5),
-                  ),
-                  RoadmapPoint(
-                    point: Point(0.32, 0.45),
-                  ),
-                  RoadmapPoint(
-                    point: Point(0.42, 0.17),
-                  ),
-                  RoadmapPoint(
-                    point: Point(0.5, 0.65),
-                  ),
-                  RoadmapPoint(
-                    point: Point(0.65, 0.3),
-                  ),
-                  RoadmapPoint(
-                    point: Point(0.8, 0.4),
-                  ),
-                  RoadmapPoint(
-                    markerShape: MarkerShape.circle,
-                    point: Point(0.85, 0.7),
-                  ),
-                ],
-                lines: [
-                  RoadmapLine(
-                    segments: [
-                      Segment(
-                        quadraticPoint: Point(0.1, 0.62),
-                        showArrow: true,
-                      ),
-                    ],
-                  ),
-                  RoadmapLine(
-                    segments: [
-                      Segment(
-                        cubicPointOne: Point(0.22, 0.22),
-                        cubicPointTwo: Point(0.23, 0.5),
-                        showArrow: true,
-                        text: 'Doing good',
-                      ),
-                    ],
-                  ),
-                  RoadmapLine(
-                    segments: [
-                      Segment(
-                        quadraticPoint: Point(0.37, 0.15),
-                        showArrow: true,
-                      ),
-                    ],
-                  ),
-                  RoadmapLine(
-                    segments: [
-                      Segment(
-                        quadraticPoint: Point(0.5, 0.17),
-                        showArrow: true,
-                        text: 'Going strong',
-                        segmentEndPoint: Point(0.5, 0.30),
-                      ),
-                      Segment(
-                        quadraticPoint: Point(0.42, 0.4),
-                        segmentEndPoint: Point(0.42, 0.3),
-                      ),
-                      Segment(
-                        quadraticPoint: Point(0.5, 0.65),
-                        segmentEndPoint: Point(0.5, 0.65),
-                      ),
-                    ],
-                  ),
-                  RoadmapLine(
-                    segments: [
-                      Segment(
-                        quadraticPoint: Point(0.65, 0.65),
-                        showArrow: true,
-                      ),
-                    ],
-                  ),
-                  RoadmapLine(
-                    segments: [
-                      Segment(
-                        quadraticPoint: Point(0.75, 0),
-                        showArrow: true,
-                        text: 'Almost there!',
-                      ),
-                    ],
-                  ),
-                  RoadmapLine(
-                    segments: [
-                      Segment(
-                        quadraticPoint: Point(0.65, 0.9),
-                        showArrow: true,
-                      ),
-                    ],
-                  ),
-                ],
+              controller: RoadmapController(
+                data: const RoadmapData(
+                  points: [
+                    RoadmapPoint(
+                      markerShape: MarkerShape.circle,
+                      point: Point(0.05, 0.6),
+                    ),
+                    RoadmapPoint(
+                      point: Point(0.18, 0.5),
+                    ),
+                    RoadmapPoint(
+                      point: Point(0.32, 0.45),
+                    ),
+                    RoadmapPoint(
+                      point: Point(0.42, 0.17),
+                    ),
+                    RoadmapPoint(
+                      point: Point(0.5, 0.65),
+                    ),
+                    RoadmapPoint(
+                      point: Point(0.65, 0.3),
+                    ),
+                    RoadmapPoint(
+                      point: Point(0.8, 0.4),
+                    ),
+                    RoadmapPoint(
+                      markerShape: MarkerShape.circle,
+                      point: Point(0.85, 0.7),
+                    ),
+                  ],
+                  lines: [
+                    RoadmapLine(
+                      segments: [
+                        Segment(
+                          quadraticPoint: Point(0.1, 0.62),
+                          showArrow: true,
+                        ),
+                      ],
+                    ),
+                    RoadmapLine(
+                      segments: [
+                        Segment(
+                          cubicPointOne: Point(0.22, 0.22),
+                          cubicPointTwo: Point(0.23, 0.5),
+                          showArrow: true,
+                          text: 'Doing good',
+                        ),
+                      ],
+                    ),
+                    RoadmapLine(
+                      segments: [
+                        Segment(
+                          quadraticPoint: Point(0.37, 0.15),
+                          showArrow: true,
+                        ),
+                      ],
+                    ),
+                    RoadmapLine(
+                      segments: [
+                        Segment(
+                          quadraticPoint: Point(0.5, 0.17),
+                          showArrow: true,
+                          text: 'Going strong',
+                          segmentEndPoint: Point(0.5, 0.30),
+                        ),
+                        Segment(
+                          quadraticPoint: Point(0.42, 0.4),
+                          segmentEndPoint: Point(0.42, 0.3),
+                        ),
+                        Segment(
+                          quadraticPoint: Point(0.5, 0.65),
+                          segmentEndPoint: Point(0.5, 0.65),
+                        ),
+                      ],
+                    ),
+                    RoadmapLine(
+                      segments: [
+                        Segment(
+                          quadraticPoint: Point(0.65, 0.65),
+                          showArrow: true,
+                        ),
+                      ],
+                    ),
+                    RoadmapLine(
+                      segments: [
+                        Segment(
+                          quadraticPoint: Point(0.75, 0),
+                          showArrow: true,
+                          text: 'Almost there!',
+                        ),
+                      ],
+                    ),
+                    RoadmapLine(
+                      segments: [
+                        Segment(
+                          quadraticPoint: Point(0.65, 0.9),
+                          showArrow: true,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              theme: RoadmapTheme(
-                lineColor: const Color.fromARGB(255, 30, 8, 111),
-                markerColor: RoadmapColorTheme.primaryColor,
-                markerTextColor: Colors.white,
-                markerShape: MarkerShape.hexagon,
+              theme: theme.copyWith(
                 lineWidth: min(size.width, size.height) / 150,
-                dashLength: 30,
-                dashSpace: 15,
               ),
               overlays: [
                 Align(

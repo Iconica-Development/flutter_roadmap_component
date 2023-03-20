@@ -17,7 +17,7 @@ class RoadmapEditor extends StatefulWidget {
     super.key,
   });
   final RoadmapTheme theme;
-  final RoadmapEditorController? controller;
+  final RoadmapController? controller;
 
   /// widgetbuilder which gets the index of the point and returns a widget
   final Widget Function(int pointIndex, BuildContext context)? pointEditBuilder;
@@ -31,13 +31,21 @@ class RoadmapEditor extends StatefulWidget {
 }
 
 class _RoadmapEditorState extends State<RoadmapEditor> {
-  late RoadmapEditorController _controller;
+  late RoadmapController _controller;
   Offset? localPosition;
 
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? RoadmapEditorController();
+    _controller = widget.controller ?? RoadmapController();
+  }
+
+  @override
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -69,23 +77,36 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                         widget.theme.markerRadius * 1.5,
                   );
                   if (dragstartPoint != null) {
+                    var newPoint = Point(
+                      details.localPosition.dx / constraints.maxWidth,
+                      details.localPosition.dy / constraints.maxHeight,
+                    );
                     // update the point in the list, create a copy of the list
                     // and replace the point in the list with the updated point
                     _controller.data = _controller.data.copyWith(
-                      points: List<RoadmapPoint>.from(
-                        _controller.data.points.map(
-                          (e) => e == dragstartPoint
-                              ? e.copyWith(
-                                  point: Point(
-                                    details.localPosition.dx /
-                                        constraints.maxWidth,
-                                    details.localPosition.dy /
-                                        constraints.maxHeight,
-                                  ),
-                                )
-                              : e,
-                        ),
-                      ),
+                      points: _controller.data.points
+                          .map(
+                            (e) => e == dragstartPoint
+                                ? e.copyWith(point: newPoint)
+                                : e,
+                          )
+                          .toList(),
+                      lines: _controller.data.lines
+                          .map(
+                            (e) => e.copyWith(
+                              segments: e.segments
+                                  .map(
+                                    (e) => (e.segmentEndPoint ==
+                                            dragstartPoint.point)
+                                        ? e.copyWith(
+                                            segmentEndPoint: newPoint,
+                                          )
+                                        : e,
+                                  )
+                                  .toList(),
+                            ),
+                          )
+                          .toList(),
                     );
                   }
                 }
@@ -121,7 +142,7 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                   );
                 });
               },
-              data: _controller.data,
+              controller: _controller,
               theme: widget.theme,
               widgetBuilder: (point, context) {
                 widget.pointEditBuilder?.call(point, context);
