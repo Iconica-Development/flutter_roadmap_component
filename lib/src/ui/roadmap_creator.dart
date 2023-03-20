@@ -32,8 +32,6 @@ class RoadmapEditor extends StatefulWidget {
 
 class _RoadmapEditorState extends State<RoadmapEditor> {
   late RoadmapEditorController _controller;
-  int? _selectedLine;
-  int? _selectedSegment;
   Offset? localPosition;
 
   @override
@@ -96,10 +94,12 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
               },
 
               onTapUp: (details) {
-                if (_selectedLine != null || _selectedSegment != null) {
+                if (_controller.data.selectedLine != null ||
+                    _controller.data.selectedSegment != null) {
                   setState(() {
-                    _selectedLine = null;
-                    _selectedSegment = null;
+                    _controller.data = _controller.data.copyWith(
+                      clearSelection: true,
+                    );
                   });
                   return;
                 }
@@ -114,13 +114,13 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                 localPosition = null;
               },
               onSegmentHit: (lineIndex, segmentIndex) {
-                debugPrint('hit line $lineIndex segment $segmentIndex');
                 setState(() {
-                  _selectedLine = lineIndex;
-                  _selectedSegment = segmentIndex;
+                  _controller.data = _controller.data.copyWith(
+                    selectedLine: lineIndex,
+                    selectedSegment: segmentIndex,
+                  );
                 });
               },
-              key: ValueKey(_controller.data.points.length),
               data: _controller.data,
               theme: widget.theme,
               widgetBuilder: (point, context) {
@@ -136,17 +136,17 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
             ),
             // Add toplayer with
             // draw circles at the point of the line
-            if (_selectedLine != null && _selectedSegment != null) ...[
+            if (_controller.data.selectedLine != null &&
+                _controller.data.selectedSegment != null) ...[
               widget.lineEditBuilder?.call(
-                    _selectedLine!,
-                    _selectedSegment!,
+                    _controller.data.selectedLine!,
+                    _controller.data.selectedSegment!,
                     context,
                   ) ??
                   Container(),
               ...drawSegmentLinePoints(
                 constraints,
-                _controller
-                    .data.lines[_selectedLine!].segments[_selectedSegment!],
+                _controller.selectedSegment,
               ),
             ],
           ],
@@ -183,11 +183,13 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                 _controller.data = _controller.data.copyWith(
                   lines: _controller.data.lines
                       .map(
-                        (line) => line == _controller.data.lines[_selectedLine!]
+                        (line) => line == _controller.selectedLine
                             ? line.copyWith(
                                 segments: [
-                                  ...line.segments
-                                      .sublist(0, _selectedSegment!),
+                                  ...line.segments.sublist(
+                                    0,
+                                    _controller.data.selectedSegment,
+                                  ),
                                   setSegmentProperty(
                                     segment,
                                     key,
@@ -200,8 +202,9 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                                               constraints.maxHeight,
                                     ),
                                   ),
-                                  ...line.segments
-                                      .sublist(_selectedSegment! + 1),
+                                  ...line.segments.sublist(
+                                    _controller.data.selectedSegment! + 1,
+                                  ),
                                 ],
                               )
                             : line,
@@ -216,11 +219,13 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                 _controller.data = _controller.data.copyWith(
                   lines: _controller.data.lines
                       .map(
-                        (line) => line == _controller.data.lines[_selectedLine!]
+                        (line) => line == _controller.selectedLine
                             ? line.copyWith(
                                 segments: [
-                                  ...line.segments
-                                      .sublist(0, _selectedSegment!),
+                                  ...line.segments.sublist(
+                                    0,
+                                    _controller.data.selectedSegment,
+                                  ),
                                   setSegmentProperty(
                                     segment,
                                     key,
@@ -233,8 +238,9 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                                               constraints.maxHeight,
                                     ),
                                   ),
-                                  ...line.segments
-                                      .sublist(_selectedSegment! + 1),
+                                  ...line.segments.sublist(
+                                    _controller.data.selectedSegment! + 1,
+                                  ),
                                 ],
                               )
                             : line,

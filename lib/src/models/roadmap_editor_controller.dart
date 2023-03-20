@@ -12,6 +12,10 @@ class RoadmapEditorController extends ChangeNotifier {
   }) : _data = data ?? const RoadmapData(lines: [], points: []);
   RoadmapData _data;
 
+  RoadmapLine get selectedLine => data.lines[data.selectedLine!];
+
+  Segment get selectedSegment => selectedLine.segments[data.selectedSegment!];
+
   RoadmapData get data => _data;
 
   set data(RoadmapData data) {
@@ -68,11 +72,50 @@ class RoadmapEditorController extends ChangeNotifier {
   }
 
   void splitSegment(Segment segment, int lineIndex, int segmentIndex) {
-    // split the segment into two segments
+    var previousPoint = (segmentIndex != 0)
+        ? data.lines[lineIndex].segments[segmentIndex - 1].segmentEndPoint!
+        : data.points[lineIndex].point;
+    var currentPoint =
+        data.lines[lineIndex].segments[segmentIndex].segmentEndPoint;
+    var splitPoint = Point(
+      (previousPoint.x + currentPoint!.x) / 2,
+      (previousPoint.y + currentPoint.y) / 2,
+    );
+    var firstSegmentSplit = Point(
+      (previousPoint.x + splitPoint.x) / 2,
+      (previousPoint.y + splitPoint.y) / 2,
+    );
+    var secondSegmentSplit = Point(
+      (splitPoint.x + currentPoint.x) / 2,
+      (splitPoint.y + currentPoint.y) / 2,
+    );
+    var firstSegment = segment.copyWith(
+      quadraticPoint: firstSegmentSplit,
+      removeCubic: true,
+      segmentEndPoint: splitPoint,
+    );
+    var secondSegment = segment.copyWith(
+      quadraticPoint: secondSegmentSplit,
+      removeCubic: true,
+      segmentEndPoint: currentPoint,
+    );
+    data = data.copyWith(
+      lines: [
+        ...data.lines.sublist(0, lineIndex),
+        data.lines[lineIndex].copyWith(
+          segments: [
+            ...data.lines[lineIndex].segments.sublist(0, segmentIndex),
+            firstSegment,
+            secondSegment,
+            ...data.lines[lineIndex].segments.sublist(segmentIndex + 1),
+          ],
+        ),
+        ...data.lines.sublist(lineIndex + 1),
+      ],
+    );
   }
 
   void removeSegment(Segment segment, int lineIndex, int segmentIndex) {
-    // remove the segment
     if (segmentIndex == 0 && data.lines[lineIndex].segments.length == 1) {
       // remove the line
       data = data.copyWith(
@@ -106,7 +149,7 @@ class RoadmapEditorController extends ChangeNotifier {
           ...data.lines.sublist(0, lineIndex),
           data.lines[lineIndex].copyWith(
             segments: [
-              ...data.lines[lineIndex].segments.sublist(0, segmentIndex),
+              ...data.lines[lineIndex].segments.sublist(segmentIndex),
             ],
           ),
           ...data.lines.sublist(lineIndex + 1),
@@ -127,6 +170,8 @@ class RoadmapEditorController extends ChangeNotifier {
         ],
       );
     }
+    // remove the line selection
+    data = data.copyWith(clearSelection: true);
   }
 
   void addPoint(Point<double> point) {

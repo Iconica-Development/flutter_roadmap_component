@@ -11,17 +11,27 @@ class RoadmapData {
   const RoadmapData({
     required this.points,
     required this.lines,
+    this.selectedLine,
+    this.selectedSegment,
   });
   final List<RoadmapPoint> points;
   final List<RoadmapLine> lines;
+  final int? selectedLine;
+  final int? selectedSegment;
 
   RoadmapData copyWith({
     List<RoadmapPoint>? points,
     List<RoadmapLine>? lines,
+    int? selectedLine,
+    int? selectedSegment,
+    bool clearSelection = false,
   }) {
     return RoadmapData(
       points: points ?? this.points,
       lines: lines ?? this.lines,
+      selectedLine: clearSelection ? null : selectedLine ?? this.selectedLine,
+      selectedSegment:
+          clearSelection ? null : selectedSegment ?? this.selectedSegment,
     );
   }
 }
