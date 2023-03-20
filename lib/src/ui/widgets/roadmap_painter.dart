@@ -75,6 +75,10 @@ class RoadmapPainter extends CustomPainter {
         }
       }
       canvas.drawPath(dashPath, paint);
+      // if there is a selected line, draw it again with a different color
+      if (data.selectedLine != null) {
+        _drawHighlightedSegment(canvas, paint);
+      }
 
       for (var i = 0; i < points.length; i++) {
         var point = points[i];
@@ -138,6 +142,32 @@ class RoadmapPainter extends CustomPainter {
       }
     }
     return false;
+  }
+
+  void _drawHighlightedSegment(Canvas canvas, Paint paint) {
+    var segment =
+        data.lines[data.selectedLine!].segments[data.selectedSegment!];
+    // previous point of the segment
+    var previousPoint = (data.selectedSegment == 0)
+        ? data.points[data.selectedLine!].point
+        : data.lines[data.selectedLine!].segments[data.selectedSegment! - 1]
+            .segmentEndPoint!;
+    var path = Path();
+    // move the path to the start of the segment
+    path.moveTo(
+      previousPoint.x * size.width,
+      previousPoint.y * size.height,
+    );
+    // draw the segment
+    _drawSegment(
+      segment,
+      size,
+      segment.segmentEndPoint ?? data.points[data.selectedLine! + 1].point,
+      path,
+    );
+    paint.color =
+        theme.selectedLineColor ?? Theme.of(context).colorScheme.primary;
+    canvas.drawPath(path, paint);
   }
 
   @override

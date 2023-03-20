@@ -9,7 +9,9 @@ import 'package:flutter_roadmap/src/models/marker.dart';
 class RoadmapTheme {
   const RoadmapTheme({
     this.lineColor,
+    this.selectedLineColor,
     this.markerColor,
+    this.selectedMarkerColor,
     this.markerTextColor,
     this.segmentTextColor,
     this.overlayColor,
@@ -30,9 +32,15 @@ class RoadmapTheme {
   factory RoadmapTheme.fromJson(Map<String, dynamic> json) => RoadmapTheme(
         lineColor:
             json['lineColor'] == null ? null : Color(json['lineColor'] as int),
+        selectedLineColor: json['selectedLineColor'] == null
+            ? null
+            : Color(json['selectedLineColor'] as int),
         markerColor: json['markerColor'] == null
             ? null
             : Color(json['markerColor'] as int),
+        selectedMarkerColor: json['selectedMarkerColor'] == null
+            ? null
+            : Color(json['selectedMarkerColor'] as int),
         markerTextColor: json['markerTextColor'] == null
             ? null
             : Color(json['markerTextColor'] as int),
@@ -62,7 +70,9 @@ class RoadmapTheme {
       );
 
   final Color? lineColor;
+  final Color? selectedLineColor;
   final Color? markerColor;
+  final Color? selectedMarkerColor;
   final Color? markerTextColor;
   final Color? segmentTextColor;
   final Color? overlayColor;
