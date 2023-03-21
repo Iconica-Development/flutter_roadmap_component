@@ -20,6 +20,7 @@ class RoadmapComponent extends StatefulWidget {
     this.onDragStart,
     this.onDragUpdate,
     this.onSegmentHit,
+    this.useDefaultPosition = true,
     super.key,
   });
 
@@ -41,6 +42,10 @@ class RoadmapComponent extends StatefulWidget {
 
   /// widgetbuilder which gets the index of the point and returns a widget
   final Widget Function(int index, BuildContext context)? widgetBuilder;
+
+  /// widgetBuilder will get positioned at a specific point on the roadmap
+  /// The position may get updated in future versions
+  final bool useDefaultPosition;
 
   final void Function(int lineIndex, int segmentIndex)? onSegmentHit;
 
@@ -113,12 +118,20 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
                       widget.theme.overlayColor ?? Colors.grey.withOpacity(0.7),
                 ),
               ),
-              Center(
-                child: widget.widgetBuilder?.call(
-                  widget.controller.data.selectedPoint!,
-                  context,
+              if (widget.useDefaultPosition) ...[
+                Center(
+                  child: widget.widgetBuilder?.call(
+                    widget.controller.data.selectedPoint!,
+                    context,
+                  ),
                 ),
-              ),
+              ] else ...[
+                widget.widgetBuilder?.call(
+                      widget.controller.data.selectedPoint!,
+                      context,
+                    ) ??
+                    Container(),
+              ]
             ],
           ],
         );

@@ -14,6 +14,7 @@ class RoadmapEditor extends StatefulWidget {
     this.controller,
     this.lineEditBuilder,
     this.pointEditBuilder,
+    this.useDefaultPosition = true,
     super.key,
   });
   final RoadmapTheme theme;
@@ -25,6 +26,11 @@ class RoadmapEditor extends StatefulWidget {
   /// widgetbuilder which gets the index of the point and returns a widget
   final Widget Function(int lineIndex, int segmentIndex, BuildContext context)?
       lineEditBuilder;
+
+  /// pointEditBuilder and lineEditBuilder will get positioned
+  /// at a specific point on the roadmap
+  /// The position may get updated in future versions
+  final bool useDefaultPosition;
 
   @override
   State<RoadmapEditor> createState() => _RoadmapEditorState();
@@ -55,6 +61,7 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
         return Stack(
           children: [
             RoadmapComponent(
+              useDefaultPosition: widget.useDefaultPosition,
               onDragStart: (details) {
                 localPosition = details.localPosition;
               },
@@ -78,17 +85,10 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                   );
                   if (dragstartPoint != null) {
                     var newPoint = Point<double>(
-                      max(
-                        0,
-                        min(1, details.localPosition.dx / constraints.maxWidth),
-                      ),
-                      max(
-                        0,
-                        min(
-                          1,
-                          details.localPosition.dy / constraints.maxHeight,
-                        ),
-                      ),
+                      (details.localPosition.dx / constraints.maxWidth)
+                          .clamp(0, 1),
+                      (details.localPosition.dy / constraints.maxHeight)
+                          .clamp(0, 1),
                     );
                     // update the point in the list, create a copy of the list
                     // and replace the point in the list with the updated point
@@ -122,7 +122,6 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                 localPosition = details.localPosition;
                 setState(() {});
               },
-
               onTapUp: (details) {
                 if (_controller.data.selectedLine != null ||
                     _controller.data.selectedSegment != null) {
@@ -154,15 +153,14 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
               controller: _controller,
               theme: widget.theme,
               widgetBuilder: (point, context) {
-                widget.pointEditBuilder?.call(point, context);
-                // default widget builder
-                return Container(
-                  width: 100,
-                  height: 100,
-                  color: Colors.red,
-                );
+                return widget.pointEditBuilder?.call(point, context) ??
+                    // default widget builder
+                    Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.red,
+                    );
               },
-              // add onTap to the roadmap component to detect clicks on lines
             ),
             // Add toplayer with
             // draw circles at the point of the line
@@ -207,7 +205,7 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
           top: e.y * constraints.maxHeight - widget.theme.markerRadius / 2,
           left: e.x * constraints.maxWidth - widget.theme.markerRadius / 2,
           child: GestureDetector(
-            onVerticalDragUpdate: (details) {
+            onPanUpdate: (details) {
               var currentPoint = getSegmentProperty(segment, key);
               setState(() {
                 _controller.data = _controller.data.copyWith(
@@ -223,73 +221,15 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                                   setSegmentProperty(
                                     segment,
                                     key,
-                                    Point<double>(
-                                      max(
-                                        0,
-                                        min(
-                                          1,
-                                          currentPoint.x +
+                                    Point(
+                                      (currentPoint.x +
                                               details.delta.dx /
-                                                  constraints.maxWidth,
-                                        ),
-                                      ),
-                                      max(
-                                        0,
-                                        min(
-                                          1,
-                                          currentPoint.y +
+                                                  constraints.maxWidth)
+                                          .clamp(0, 1),
+                                      (currentPoint.y +
                                               details.delta.dy /
-                                                  constraints.maxHeight,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  ...line.segments.sublist(
-                                    _controller.data.selectedSegment! + 1,
-                                  ),
-                                ],
-                              )
-                            : line,
-                      )
-                      .toList(),
-                );
-              });
-            },
-            onHorizontalDragUpdate: (details) {
-              var currentPoint = getSegmentProperty(segment, key);
-              setState(() {
-                _controller.data = _controller.data.copyWith(
-                  lines: _controller.data.lines
-                      .map(
-                        (line) => line == _controller.selectedLine
-                            ? line.copyWith(
-                                segments: [
-                                  ...line.segments.sublist(
-                                    0,
-                                    _controller.data.selectedSegment,
-                                  ),
-                                  setSegmentProperty(
-                                    segment,
-                                    key,
-                                    Point<double>(
-                                      max(
-                                        0,
-                                        min(
-                                          1,
-                                          currentPoint.x +
-                                              details.delta.dx /
-                                                  constraints.maxWidth,
-                                        ),
-                                      ),
-                                      max(
-                                        0,
-                                        min(
-                                          1,
-                                          currentPoint.y +
-                                              details.delta.dy /
-                                                  constraints.maxHeight,
-                                        ),
-                                      ),
+                                                  constraints.maxHeight)
+                                          .clamp(0, 1),
                                     ),
                                   ),
                                   ...line.segments.sublist(
