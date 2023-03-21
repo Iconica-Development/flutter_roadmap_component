@@ -77,9 +77,18 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                         widget.theme.markerRadius * 1.5,
                   );
                   if (dragstartPoint != null) {
-                    var newPoint = Point(
-                      details.localPosition.dx / constraints.maxWidth,
-                      details.localPosition.dy / constraints.maxHeight,
+                    var newPoint = Point<double>(
+                      max(
+                        0,
+                        min(1, details.localPosition.dx / constraints.maxWidth),
+                      ),
+                      max(
+                        0,
+                        min(
+                          1,
+                          details.localPosition.dy / constraints.maxHeight,
+                        ),
+                      ),
                     );
                     // update the point in the list, create a copy of the list
                     // and replace the point in the list with the updated point
@@ -214,13 +223,25 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                                   setSegmentProperty(
                                     segment,
                                     key,
-                                    Point(
-                                      currentPoint.x +
-                                          details.delta.dx /
-                                              constraints.maxWidth,
-                                      currentPoint.y +
-                                          details.delta.dy /
-                                              constraints.maxHeight,
+                                    Point<double>(
+                                      max(
+                                        0,
+                                        min(
+                                          1,
+                                          currentPoint.x +
+                                              details.delta.dx /
+                                                  constraints.maxWidth,
+                                        ),
+                                      ),
+                                      max(
+                                        0,
+                                        min(
+                                          1,
+                                          currentPoint.y +
+                                              details.delta.dy /
+                                                  constraints.maxHeight,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   ...line.segments.sublist(
@@ -250,13 +271,25 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
                                   setSegmentProperty(
                                     segment,
                                     key,
-                                    Point(
-                                      currentPoint.x +
-                                          details.delta.dx /
-                                              constraints.maxWidth,
-                                      currentPoint.y +
-                                          details.delta.dy /
-                                              constraints.maxHeight,
+                                    Point<double>(
+                                      max(
+                                        0,
+                                        min(
+                                          1,
+                                          currentPoint.x +
+                                              details.delta.dx /
+                                                  constraints.maxWidth,
+                                        ),
+                                      ),
+                                      max(
+                                        0,
+                                        min(
+                                          1,
+                                          currentPoint.y +
+                                              details.delta.dy /
+                                                  constraints.maxHeight,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   ...line.segments.sublist(
