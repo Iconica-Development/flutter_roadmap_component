@@ -211,5 +211,67 @@ class RoadmapController extends ChangeNotifier {
     }
   }
 
-  void removePoint(RoadmapPoint point) {}
+  void removePoint(RoadmapPoint point) {
+    var pointIndex = data.points.indexOf(point);
+    if (pointIndex == 0 && data.points.length == 1) {
+      // remove the point and the line
+      data = data.copyWith(
+        points: [],
+        lines: [],
+      );
+    } else if (pointIndex == 0) {
+      // remove the point and the first segment
+      data = data.copyWith(
+        points: [
+          ...data.points.sublist(1),
+        ],
+        lines: [
+          data.lines.first.copyWith(
+            segments: [
+              ...data.lines.first.segments.sublist(1),
+            ],
+          ),
+          ...data.lines.sublist(1),
+        ],
+      );
+    } else if (pointIndex == data.points.length - 1) {
+      // remove the point and the last segment
+      data = data.copyWith(
+        points: [
+          ...data.points.sublist(0, pointIndex),
+        ],
+        lines: [
+          ...data.lines.sublist(0, data.lines.length - 1),
+          data.lines.last.copyWith(
+            segments: [
+              ...data.lines.last.segments.sublist(
+                0,
+                data.lines.last.segments.length - 1,
+              ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      // remove the point and the middle segment
+      data = data.copyWith(
+        points: [
+          ...data.points.sublist(0, pointIndex),
+          ...data.points.sublist(pointIndex + 1),
+        ],
+        lines: [
+          ...data.lines.sublist(0, pointIndex),
+          data.lines[pointIndex].copyWith(
+            segments: [
+              ...data.lines[pointIndex].segments
+                  .sublist(0, data.lines[pointIndex].segments.length - 1),
+            ],
+          ),
+          ...data.lines.sublist(pointIndex + 1),
+        ],
+      );
+    }
+    // remove the point selection
+    data = data.copyWith(clearSelection: true);
+  }
 }

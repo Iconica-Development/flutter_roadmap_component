@@ -16,8 +16,7 @@ class RoadmapLine {
   factory RoadmapLine.fromJson(List<dynamic> json) => RoadmapLine(
         segments: json
             .map(
-              (dynamic segment) =>
-                  Segment.fromJson(segment as Map<String, dynamic>),
+              (segment) => Segment.fromJson(segment as Map<String, dynamic>),
             )
             .toList(),
       );
@@ -32,9 +31,8 @@ class RoadmapLine {
 
   RoadmapLine copyWith({
     List<Segment>? segments,
-  }) {
-    return RoadmapLine(
-      segments: segments ?? this.segments,
-    );
-  }
+  }) =>
+      RoadmapLine(
+        segments: segments ?? this.segments,
+      );
 }

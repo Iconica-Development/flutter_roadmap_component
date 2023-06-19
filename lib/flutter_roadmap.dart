@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: BSD-3-Clause
 
+/// A library for creating roadmaps in Flutter.
 library flutter_roadmap;
 
 export 'src/models/marker.dart';

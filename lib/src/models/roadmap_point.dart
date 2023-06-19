@@ -61,13 +61,12 @@ class RoadmapPoint {
     Widget? overlay,
     MarkerShape? markerShape,
     Widget Function(BuildContext context)? widgetBuilder,
-  }) {
-    return RoadmapPoint(
-      point: point ?? this.point,
-      text: text ?? this.text,
-      overlay: overlay ?? this.overlay,
-      markerShape: markerShape ?? this.markerShape,
-      widgetBuilder: widgetBuilder ?? this.widgetBuilder,
-    );
-  }
+  }) =>
+      RoadmapPoint(
+        point: point ?? this.point,
+        text: text ?? this.text,
+        overlay: overlay ?? this.overlay,
+        markerShape: markerShape ?? this.markerShape,
+        widgetBuilder: widgetBuilder ?? this.widgetBuilder,
+      );
 }

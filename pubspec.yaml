@@ -16,5 +16,5 @@ dev_dependencies:
   flutter_iconica_analysis:
     git:
       url: https://github.com/Iconica-Development/flutter_iconica_analysis
-      ref: 4.0.0
+      ref: 6.0.0
 flutter:

@@ -55,10 +55,8 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Stack(
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) => Stack(
           children: [
             RoadmapComponent(
               useDefaultPosition: widget.useDefaultPosition,
@@ -152,15 +150,14 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
               },
               controller: _controller,
               theme: widget.theme,
-              widgetBuilder: (point, context) {
-                return widget.pointEditBuilder?.call(point, context) ??
-                    // default widget builder
-                    Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.red,
-                    );
-              },
+              widgetBuilder: (point, context) =>
+                  widget.pointEditBuilder?.call(point, context) ??
+                  // default widget builder
+                  Container(
+                    width: 100,
+                    height: 100,
+                    color: Colors.red,
+                  ),
             ),
             // Add toplayer with
             // draw circles at the point of the line
@@ -178,10 +175,8 @@ class _RoadmapEditorState extends State<RoadmapEditor> {
               ),
             ],
           ],
-        );
-      },
-    );
-  }
+        ),
+      );
 
   List<Widget> drawSegmentLinePoints(
     BoxConstraints constraints,

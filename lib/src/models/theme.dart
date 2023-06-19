@@ -113,19 +113,18 @@ class RoadmapTheme {
     MarkerShape? markerShape,
     double? dashLength,
     double? dashSpace,
-  }) {
-    return RoadmapTheme(
-      lineColor: lineColor ?? this.lineColor,
-      markerColor: markerColor ?? this.markerColor,
-      markerTextColor: markerTextColor ?? this.markerTextColor,
-      segmentTextColor: segmentTextColor ?? this.segmentTextColor,
-      overlayColor: overlayColor ?? this.overlayColor,
-      pointDragColor: pointDragColor ?? this.pointDragColor,
-      markerRadius: markerRadius ?? this.markerRadius,
-      lineWidth: lineWidth ?? this.lineWidth,
-      markerShape: markerShape ?? this.markerShape,
-      dashLength: dashLength ?? this.dashLength,
-      dashSpace: dashSpace ?? this.dashSpace,
-    );
-  }
+  }) =>
+      RoadmapTheme(
+        lineColor: lineColor ?? this.lineColor,
+        markerColor: markerColor ?? this.markerColor,
+        markerTextColor: markerTextColor ?? this.markerTextColor,
+        segmentTextColor: segmentTextColor ?? this.segmentTextColor,
+        overlayColor: overlayColor ?? this.overlayColor,
+        pointDragColor: pointDragColor ?? this.pointDragColor,
+        markerRadius: markerRadius ?? this.markerRadius,
+        lineWidth: lineWidth ?? this.lineWidth,
+        markerShape: markerShape ?? this.markerShape,
+        dashLength: dashLength ?? this.dashLength,
+        dashSpace: dashSpace ?? this.dashSpace,
+      );
 }

@@ -55,10 +55,8 @@ class RoadmapComponent extends StatefulWidget {
 
 class _RoadmapComponentState extends State<RoadmapComponent> {
   @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Stack(
+  Widget build(BuildContext context) => LayoutBuilder(
+        builder: (context, constraints) => Stack(
           children: [
             GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -134,10 +132,8 @@ class _RoadmapComponentState extends State<RoadmapComponent> {
               ]
             ],
           ],
-        );
-      },
-    );
-  }
+        ),
+      );
 
   void handleTapUp(
     TapUpDetails details,

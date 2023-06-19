@@ -28,19 +28,18 @@ class RoadmapData {
     int? selectedSegment,
     int? selectedPoint,
     bool clearSelection = false,
-  }) {
-    return RoadmapData(
-      points: points ?? this.points,
-      lines: lines ?? this.lines,
-      selectedLine: selectedLine == null && clearSelection
-          ? null
-          : selectedLine ?? this.selectedLine,
-      selectedSegment: selectedSegment == null && clearSelection
-          ? null
-          : selectedSegment ?? this.selectedSegment,
-      selectedPoint: selectedPoint == null && clearSelection
-          ? null
-          : selectedPoint ?? this.selectedPoint,
-    );
-  }
+  }) =>
+      RoadmapData(
+        points: points ?? this.points,
+        lines: lines ?? this.lines,
+        selectedLine: selectedLine == null && clearSelection
+            ? null
+            : selectedLine ?? this.selectedLine,
+        selectedSegment: selectedSegment == null && clearSelection
+            ? null
+            : selectedSegment ?? this.selectedSegment,
+        selectedPoint: selectedPoint == null && clearSelection
+            ? null
+            : selectedPoint ?? this.selectedPoint,
+      );
 }
