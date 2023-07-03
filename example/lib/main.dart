@@ -21,7 +21,7 @@ class FlutterRoadmapDemo extends StatefulWidget {
 }
 
 class _FlutterRoadmapDemoState extends State<FlutterRoadmapDemo> {
-  bool _showCreator = true;
+  bool _showCreator = false;
   final RoadmapController _controller = RoadmapController();
 
   final RoadmapTheme theme = const RoadmapTheme(
